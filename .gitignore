@@ -1,2 +1,3 @@
 ci-server/target/
 .vscode
+*.DS_Store
