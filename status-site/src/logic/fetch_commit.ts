@@ -3,8 +3,8 @@ import type { Commit, ExtendedCommit } from "./github.commit.types"
 
 export interface BareCommit {
   sha: string
-  success: boolean
-  log: string
+  status: "success" | "fail" | "unset"
+  log?: string
 }
 
 export async function fetchCommits(
@@ -18,13 +18,10 @@ export async function fetchCommits(
     const bareCommit = bareCommits.find(
       (bareCommit) => bareCommit.sha === commit.sha
     )
-    if (bareCommit != null) {
-      return {
-        ...commit,
-        success: bareCommit.success,
-        log: bareCommit.log,
-      } as ExtendedCommit
-    }
-    return commit as ExtendedCommit
+    return {
+      ...commit,
+      status: bareCommit?.status ?? "unset",
+      log: bareCommit?.log,
+    } as ExtendedCommit
   })
 }
