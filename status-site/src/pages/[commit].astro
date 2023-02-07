@@ -45,7 +45,7 @@ console.log(commit.log)
 				<img class="author-image" src={commit.author?.avatar_url} />
    		        <a href={`https://github.com/${commit.commit.author?.name}`} class="authortext">{commit.commit.author?.name}</a>
 			</div>
-			<p>{commit.sha}</p>
+			<a href={commit.html_url}>{commit.sha}</a>
 		</div>
 		<div class="log-container">
 		{commit.log != null ? 
