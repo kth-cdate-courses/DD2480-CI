@@ -3,6 +3,7 @@ import Layout from "../layouts/Layout.astro";
 import { BareCommit, fetchCommits } from "../logic/fetch_commit";
 import { commits as bareCommits } from "../../../data.json";
 import type { ExtendedCommit } from "../logic/github.commit.types";
+import { DateTime } from "luxon";
 
 export async function getStaticPaths() {
 	const commits = await fetchCommits(bareCommits as BareCommit[])
@@ -16,12 +17,92 @@ export async function getStaticPaths() {
 	}))
 }
 
-const item = Astro.props.item as ExtendedCommit;
-
+const commit = Astro.props.item as ExtendedCommit;
+console.log(commit.log)
 ---
 
-<Layout title={item.commit.message}>
-	<p>You are viewing commit: {item.sha}</p>
-	<p>Status: {item.status}</p>
-	<p>Author: {item.commit.author?.name}</p>
+<Layout title={commit.commit.message}>
+	<div class="page-container">
+		<div class="header-row">
+			<h3>{commit.commit.message.split("\n")[0]}</h3>
+			{
+				commit.status === "unset" ? null : commit.status === "success" ? (
+				  <p class="build-info success">Build passed</p>
+				) : (
+				  <p class="build-info fail">Build failed</p>
+				)
+			  }
+		</div>
+		<div class="commit-description-container">
+			{commit.commit.message.split("\n").length > 1 ? 
+				<>{commit.commit.message.split("\n").slice(1).filter(current => current.length != 0).map(current => <p>{current}</p>)}</> : 
+				null
+			}
+		</div>
+		<div class="metarow">
+			{commit.commit.author?.date != null ? <p class="datetext card-header-text">{DateTime.fromISO(commit.commit.author?.date).toFormat("HH:mm, d MMMM yyyy")}</p> : null}
+			<div>
+				<img class="author-image" src={commit.author?.avatar_url} />
+   		        <a href={`https://github.com/${commit.commit.author?.name}`} class="authortext">{commit.commit.author?.name}</a>
+			</div>
+			<p>{commit.sha}</p>
+		</div>
+		<div class="log-container">
+		{commit.log != null ? 
+			commit.log?.split("\n").map((line) => <p class="log-row">{line}</p>) : 
+			<p>This commit has not been processed by the CI server</p>}
+		</div>
+		
+	</div>
 </Layout>
+
+<style>
+	.header-row {
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		align-items: center;
+	}
+	.page-container {
+		display: flex;
+		flex-direction: column;
+		
+		max-width: 800px;
+		margin-left: auto;
+		margin-right: auto;
+	}
+
+	.commit-description-container {
+		margin-bottom: 2rem;
+	}
+	.commit-description-container p {
+		display: block;
+		color: #777;
+	}
+
+	.metarow {
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		align-items: center;
+	}
+	.metarow p {
+		color: #777;
+	}
+	.author-image {
+		margin-right: 0.5rem;
+		height: 1rem;
+		border-radius: 50%;
+	}
+	.log-container {
+		margin-top: 1rem;
+		border-radius: 10px;
+		background-color: #1E2836;
+		padding: 1rem;
+		color: #ccc;
+	}
+	.log-row {
+		display: block;
+		margin-bottom: 0.75rem;
+	}
+</style>

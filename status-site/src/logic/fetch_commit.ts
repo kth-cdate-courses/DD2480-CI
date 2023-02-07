@@ -23,6 +23,7 @@ export async function fetchCommits(
     const bareCommit = bareCommits.find(
       (bareCommit) => bareCommit.sha === commit.sha
     )
+    console.log(bareCommit?.log)
     return {
       ...commit,
       status: bareCommit?.status ?? "unset",
