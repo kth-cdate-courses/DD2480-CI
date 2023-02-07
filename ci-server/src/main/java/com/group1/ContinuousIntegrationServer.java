@@ -5,6 +5,10 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletException;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.Request;
@@ -29,7 +33,22 @@ public class ContinuousIntegrationServer extends AbstractHandler {
         // 1st clone your repository
         // 2nd compile the code
 
-        response.getWriter().println("CI job done");
+        // EDIT THESE VARIABLES TO ACTUALLY BE HOOKED UP TO THE COMMIT LATER
+        String commitSHA = "81b0a2439191e4b6add8c08a628f9c344584a76b";
+        String status = true ? "success" : "fail";
+
+        HttpRequest httpRequest = HttpRequest.newBuilder()
+            .uri(URI.create("https://api.github.com/repos/kth-cdate-courses/DD2480-CI/statuses/" + commitSHA))
+            .header("Authorization", "Bearer " + System.getenv("GITHUB_API_TOKEN"))
+            .header("Content-Type", "application/json")
+            .POST(HttpRequest.BodyPublishers.ofString("{\"status\":\"" + status + "\"}"))
+            .build();
+
+        try {
+            HttpClient.newHttpClient().send(httpRequest, HttpResponse.BodyHandlers.ofString());
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     // used to start the CI server in command line
