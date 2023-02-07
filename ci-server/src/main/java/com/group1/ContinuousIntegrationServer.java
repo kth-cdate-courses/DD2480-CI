@@ -34,8 +34,15 @@ public class ContinuousIntegrationServer extends AbstractHandler {
         // 2nd compile the code
 
         // EDIT THESE VARIABLES TO ACTUALLY BE HOOKED UP TO THE COMMIT LATER
-        String commitSHA = "81b0a2439191e4b6add8c08a628f9c344584a76b";
-        String status = true ? "success" : "fail";
+        updateCommitStatusOnGithub("SOMETHING SOMETHING", false /* EDIT THIS LATER */);
+    }
+
+    public static boolean updateCommitStatusOnGithub(String commitSHA, boolean success) {
+        String status = success ? "success" : "fail";
+
+        if (System.getenv("GITHUB_API_TOKEN") == null) {
+            return false;
+        }
 
         HttpRequest httpRequest = HttpRequest.newBuilder()
             .uri(URI.create("https://api.github.com/repos/kth-cdate-courses/DD2480-CI/statuses/" + commitSHA))
@@ -48,7 +55,10 @@ public class ContinuousIntegrationServer extends AbstractHandler {
             HttpClient.newHttpClient().send(httpRequest, HttpResponse.BodyHandlers.ofString());
         } catch (InterruptedException e) {
             e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+        return true;
     }
 
     // used to start the CI server in command line
