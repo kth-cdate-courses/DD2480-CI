@@ -6,8 +6,10 @@ import javax.servlet.ServletException;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.Request;
@@ -35,11 +37,14 @@ public class ContinuousIntegrationServer extends AbstractHandler {
         response.getWriter().println("CI job done");
     }
 
+
     /**
-     * Clones the watched repository to a given folder in the project
+     * Clones the watched repository to a given folder in the project.
+     * Redirects the output to the given output file.
      * 
      * @param repoUrl url of the Git repository
      * @param repoFolder path to the folder where the repository will be cloned
+     * @param outputFile file to save the output
      */
     void cloneRepository(URL repoUrl, Path repoFolder, File outputFile) {
         ProcessBuilder processBuilder = new ProcessBuilder("bash", "-c", "cd " + repoFolder.toString() + " && git clone " + repoUrl.toString());
