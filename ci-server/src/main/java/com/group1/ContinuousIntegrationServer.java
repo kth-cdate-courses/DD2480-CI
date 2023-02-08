@@ -38,8 +38,9 @@ public class ContinuousIntegrationServer extends AbstractHandler {
      * @param repoUrl url of the Git repository
      * @param repoFolder path to the folder where the repository will be cloned
      */
-    void cloneRepository(URL repoUrl, Path repoFolder) {
-        ProcessBuilder processBuilder = new ProcessBuilder("sh", "-c", "cd " repoFolder.toString() + " && git clone " + repoUrl.toString());
+    void cloneRepository(URL repoUrl, Path repoFolder, File outputFile) {
+        ProcessBuilder processBuilder = new ProcessBuilder("bash", "-c", "cd " repoFolder.toString() + " && git clone " + repoUrl.toString());
+        processBuilder.redirectOutput(outputFile);
         try {
             Process p = processBuilder.start();
             while (p.isAlive()) {
