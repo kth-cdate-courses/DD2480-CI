@@ -5,7 +5,7 @@ import javax.servlet.ServletException;
 
 public class RequestExtraction {
     
-    public String getRepositoryUrlFromRequest(HttpServletRequest request){
+    public static String getRepositoryUrlFromRequest(HttpServletRequest request){
         return request.getParameter("ssh_url");
     }
 

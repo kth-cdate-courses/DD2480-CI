@@ -37,6 +37,22 @@ public class ContinuousIntegrationServer extends AbstractHandler {
         response.getWriter().println("CI job done");
     }
 
+    /**
+     * Downloads the code of the repository which triggered a request.
+     * 
+     * @param request contains information on the event and the repository
+     */
+    void downloadCode(HttpServletRequest request){
+        try {
+        URL repoUrl = new URL(RequestExtraction.getRepositoryUrlFromRequest(request));
+        Path repoFolder = Paths.get("./watched-repository");
+        File outputFile = new File("./dowloadOutput.txt");
+        cloneRepository(repoUrl, repoFolder, outputFile);
+        }
+        catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * Clones the watched repository to a given folder in the project.
