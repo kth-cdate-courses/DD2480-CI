@@ -5,7 +5,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.regex.Pattern;
 
-class Output_parser {
+public class Output_parser {
     /*
      * takes in a file handle as an argument and returns either:
      * State.COMPILE_FAILURE enum if the file provided contains the regex "BUILD FAILURE".
