@@ -1,6 +1,6 @@
 package com.group1;
 
-enum Status {
+public enum Status {
     SUCCESS,
     DOWNLOAD_FAILED,
     COMPILE_FAILED,
