@@ -4,7 +4,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletException;
 
+import java.io.File;
 import java.io.IOException;
+import java.net.URL;
+import java.nio.file.Path;
 
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.Request;
@@ -39,7 +42,7 @@ public class ContinuousIntegrationServer extends AbstractHandler {
      * @param repoFolder path to the folder where the repository will be cloned
      */
     void cloneRepository(URL repoUrl, Path repoFolder, File outputFile) {
-        ProcessBuilder processBuilder = new ProcessBuilder("bash", "-c", "cd " repoFolder.toString() + " && git clone " + repoUrl.toString());
+        ProcessBuilder processBuilder = new ProcessBuilder("bash", "-c", "cd " + repoFolder.toString() + " && git clone " + repoUrl.toString());
         processBuilder.redirectOutput(outputFile);
         try {
             Process p = processBuilder.start();
