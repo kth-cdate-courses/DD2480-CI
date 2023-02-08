@@ -40,6 +40,10 @@ public class ContinuousIntegrationServer extends AbstractHandler {
      * @param outputFile file to where the output from the compilation and tests will be written
      */
     void compileAndRunTests(File targetDirectory, File outputFile) {
+        boolean isMavenProject = new File(targetDirectory.getAbsolutePath() + "/pom.xml").exists();
+        if (!(targetDirectory.isDirectory() && isMavenProject))
+            throw new IllegalArgumentException("targetDirectory is not a maven directory");
+
         ProcessBuilder processBuilder = new ProcessBuilder("bash", "-c", "./mvnw -f " + targetDirectory.getAbsolutePath() + " clean test");
         processBuilder.redirectOutput(outputFile);
         try {
