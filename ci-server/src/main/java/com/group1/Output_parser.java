@@ -13,7 +13,7 @@ public class Output_parser {
      * Status.TEST_FAILED enum if the file provided contains the regex "Failures: [^0]+".
      * Status.DOWNLOAD_FAILED enum if none of the above conditions can be met or if the method throws an IOException.
      */
-    public Status output_file_state_parser(File file) {
+    public static Status output_file_state_parser(File file) {
         Pattern compileFailurePattern = Pattern.compile("BUILD FAILURE");
         Pattern successPattern = Pattern.compile("Failures: 0");
         Pattern testFailurePattern = Pattern.compile("Failures: [^0]+");
