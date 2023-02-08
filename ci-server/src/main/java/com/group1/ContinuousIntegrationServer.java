@@ -40,7 +40,7 @@ public class ContinuousIntegrationServer extends AbstractHandler {
      * @param outputFile file to where the output from the compilation and tests will be written
      */
     void compileAndRunTests(File targetDirectory, File outputFile) {
-        ProcessBuilder processBuilder = new ProcessBuilder("sh", "-c", "./mvnw -f " + targetDirectory.getAbsolutePath() + " clean test");
+        ProcessBuilder processBuilder = new ProcessBuilder("bash", "-c", "./mvnw -f " + targetDirectory.getAbsolutePath() + " clean test");
         processBuilder.redirectOutput(outputFile);
         try {
             Process p = processBuilder.start();
