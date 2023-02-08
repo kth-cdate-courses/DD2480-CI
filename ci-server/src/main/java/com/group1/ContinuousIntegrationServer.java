@@ -32,6 +32,26 @@ public class ContinuousIntegrationServer extends AbstractHandler {
         response.getWriter().println("CI job done");
     }
 
+    /**
+     * Clones the watched repository to a given folder in the project
+     * 
+     * @param repoUrl url of the Git repository
+     * @param repoFolder path to the folder where the repository will be cloned
+     */
+    void cloneRepository(URL repoUrl, Path repoFolder) {
+        ProcessBuilder processBuilder = new ProcessBuilder("sh", "-c", "cd " repoFolder.toString() + " && git clone " + repoUrl.toString());
+        try {
+            Process p = processBuilder.start();
+            while (p.isAlive()) {
+                Thread.sleep(1000);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
     // used to start the CI server in command line
     public static void main(String[] args) throws Exception {
         Server server = new Server(8080);
