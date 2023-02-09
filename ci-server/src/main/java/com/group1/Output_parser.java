@@ -17,20 +17,16 @@ public class Output_parser {
         Pattern compileFailurePattern = Pattern.compile("BUILD FAILURE");
         Pattern successPattern = Pattern.compile("Failures: 0");
         Pattern testFailurePattern = Pattern.compile("Failures: [^0]+");
-        try {
-            BufferedReader br = new BufferedReader(new FileReader(file));
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line = br.readLine();
             while(line != null) {
                 if(compileFailurePattern.matcher(line).find()) {
-                    br.close();
                     return Status.COMPILE_FAILED;
                 }
                 if(successPattern.matcher(line).find()) {
-                    br.close();
                     return Status.SUCCESS;
                 }
                 if(testFailurePattern.matcher(line).find()) {
-                    br.close();
                     return Status.TEST_FAILED;
                 }
                 line = br.readLine();
