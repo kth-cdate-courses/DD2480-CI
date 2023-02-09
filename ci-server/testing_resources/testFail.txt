@@ -5,23 +5,23 @@
 [INFO] --------------------------------[ jar ]---------------------------------
 [INFO] 
 [INFO] --- maven-clean-plugin:3.1.0:clean (default-clean) @ ci-server ---
-[INFO] Deleting /Users/Erik/Desktop/Programmering/DD2480-CI/ci-server/target
+[INFO] Deleting /DD2480-CI/ci-server/target
 [INFO] 
 [INFO] --- maven-resources-plugin:3.0.2:resources (default-resources) @ ci-server ---
 [INFO] Using 'UTF-8' encoding to copy filtered resources.
-[INFO] skip non existing resourceDirectory /Users/Erik/Desktop/Programmering/DD2480-CI/ci-server/src/main/resources
+[INFO] skip non existing resourceDirectory /DD2480-CI/ci-server/src/main/resources
 [INFO] 
 [INFO] --- maven-compiler-plugin:3.8.0:compile (default-compile) @ ci-server ---
 [INFO] Changes detected - recompiling the module!
-[INFO] Compiling 1 source file to /Users/Erik/Desktop/Programmering/DD2480-CI/ci-server/target/classes
+[INFO] Compiling 1 source file to /DD2480-CI/ci-server/target/classes
 [INFO] 
 [INFO] --- maven-resources-plugin:3.0.2:testResources (default-testResources) @ ci-server ---
 [INFO] Using 'UTF-8' encoding to copy filtered resources.
-[INFO] skip non existing resourceDirectory /Users/Erik/Desktop/Programmering/DD2480-CI/ci-server/src/test/resources
+[INFO] skip non existing resourceDirectory /DD2480-CI/ci-server/src/test/resources
 [INFO] 
 [INFO] --- maven-compiler-plugin:3.8.0:testCompile (default-testCompile) @ ci-server ---
 [INFO] Changes detected - recompiling the module!
-[INFO] Compiling 1 source file to /Users/Erik/Desktop/Programmering/DD2480-CI/ci-server/target/test-classes
+[INFO] Compiling 1 source file to /DD2480-CI/ci-server/target/test-classes
 [INFO] 
 [INFO] --- maven-surefire-plugin:2.22.1:test (default-test) @ ci-server ---
 [INFO] 
@@ -50,7 +50,7 @@ java.lang.AssertionError
 [INFO] ------------------------------------------------------------------------
 [ERROR] Failed to execute goal org.apache.maven.plugins:maven-surefire-plugin:2.22.1:test (default-test) on project ci-server: There are test failures.
 [ERROR] 
-[ERROR] Please refer to /Users/Erik/Desktop/Programmering/DD2480-CI/ci-server/target/surefire-reports for the individual test results.
+[ERROR] Please refer to /DD2480-CI/ci-server/target/surefire-reports for the individual test results.
 [ERROR] Please refer to dump files (if any exist) [date].dump, [date]-jvmRun[N].dump and [date].dumpstream.
 [ERROR] -> [Help 1]
 [ERROR] 

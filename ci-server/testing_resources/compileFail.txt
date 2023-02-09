@@ -5,19 +5,19 @@
 [INFO] --------------------------------[ jar ]---------------------------------
 [INFO] 
 [INFO] --- maven-clean-plugin:3.1.0:clean (default-clean) @ ci-server ---
-[INFO] Deleting /Users/Erik/Desktop/Programmering/DD2480-CI/ci-server/target
+[INFO] Deleting /DD2480-CI/ci-server/target
 [INFO] 
 [INFO] --- maven-resources-plugin:3.0.2:resources (default-resources) @ ci-server ---
 [INFO] Using 'UTF-8' encoding to copy filtered resources.
-[INFO] skip non existing resourceDirectory /Users/Erik/Desktop/Programmering/DD2480-CI/ci-server/src/main/resources
+[INFO] skip non existing resourceDirectory /DD2480-CI/ci-server/src/main/resources
 [INFO] 
 [INFO] --- maven-compiler-plugin:3.8.0:compile (default-compile) @ ci-server ---
 [INFO] Changes detected - recompiling the module!
-[INFO] Compiling 1 source file to /Users/Erik/Desktop/Programmering/DD2480-CI/ci-server/target/classes
+[INFO] Compiling 1 source file to /DD2480-CI/ci-server/target/classes
 [INFO] -------------------------------------------------------------
 [ERROR] COMPILATION ERROR : 
 [INFO] -------------------------------------------------------------
-[ERROR] /Users/Erik/Desktop/Programmering/DD2480-CI/ci-server/src/main/java/com/group1/ContinuousIntegrationServer.java:[25,35] ';' expected
+[ERROR] /DD2480-CI/ci-server/src/main/java/com/group1/ContinuousIntegrationServer.java:[25,35] ';' expected
 [INFO] 1 error
 [INFO] -------------------------------------------------------------
 [INFO] ------------------------------------------------------------------------
@@ -27,7 +27,7 @@
 [INFO] Finished at: 2023-02-07T19:52:06+01:00
 [INFO] ------------------------------------------------------------------------
 [ERROR] Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.8.0:compile (default-compile) on project ci-server: Compilation failure
-[ERROR] /Users/Erik/Desktop/Programmering/DD2480-CI/ci-server/src/main/java/com/group1/ContinuousIntegrationServer.java:[25,35] ';' expected
+[ERROR] /DD2480-CI/ci-server/src/main/java/com/group1/ContinuousIntegrationServer.java:[25,35] ';' expected
 [ERROR] 
 [ERROR] -> [Help 1]
 [ERROR] 

@@ -8,19 +8,19 @@
 [INFO] 
 [INFO] --- maven-resources-plugin:3.0.2:resources (default-resources) @ ci-server ---
 [INFO] Using 'UTF-8' encoding to copy filtered resources.
-[INFO] skip non existing resourceDirectory /Users/Erik/Desktop/Programmering/DD2480-CI/ci-server/src/main/resources
+[INFO] skip non existing resourceDirectory /DD2480-CI/ci-server/src/main/resources
 [INFO] 
 [INFO] --- maven-compiler-plugin:3.8.0:compile (default-compile) @ ci-server ---
 [INFO] Changes detected - recompiling the module!
-[INFO] Compiling 1 source file to /Users/Erik/Desktop/Programmering/DD2480-CI/ci-server/target/classes
+[INFO] Compiling 1 source file to /DD2480-CI/ci-server/target/classes
 [INFO] 
 [INFO] --- maven-resources-plugin:3.0.2:testResources (default-testResources) @ ci-server ---
 [INFO] Using 'UTF-8' encoding to copy filtered resources.
-[INFO] skip non existing resourceDirectory /Users/Erik/Desktop/Programmering/DD2480-CI/ci-server/src/test/resources
+[INFO] skip non existing resourceDirectory /DD2480-CI/ci-server/src/test/resources
 [INFO] 
 [INFO] --- maven-compiler-plugin:3.8.0:testCompile (default-testCompile) @ ci-server ---
 [INFO] Changes detected - recompiling the module!
-[INFO] Compiling 1 source file to /Users/Erik/Desktop/Programmering/DD2480-CI/ci-server/target/test-classes
+[INFO] Compiling 1 source file to /DD2480-CI/ci-server/target/test-classes
 [INFO] 
 [INFO] --- maven-surefire-plugin:2.22.1:test (default-test) @ ci-server ---
 [INFO] 
