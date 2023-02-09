@@ -1,0 +1,27 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { BareCommit, fetchCommits } from "../logic/fetch_commit";
+import { commits as bareCommits } from "../../../data.json";
+import type { ExtendedCommit } from "../logic/github.commit.types";
+
+export async function getStaticPaths() {
+	const commits = await fetchCommits(bareCommits as BareCommit[])
+	return commits.map((item) => ({
+		params: {
+			commit: item.sha
+		},
+		props: {
+			item
+		}
+	}))
+}
+
+const item = Astro.props.item as ExtendedCommit;
+
+---
+
+<Layout title={item.commit.message}>
+	<p>You are viewing commit: {item.sha}</p>
+	<p>Status: {item.status}</p>
+	<p>Author: {item.commit.author?.name}</p>
+</Layout>
