@@ -26,7 +26,7 @@ jobs:
         with:
           path: status-site
           node-version: 16
-          package-manager: yarn
+          package-manager: pnpm
 
   deploy:
     needs: build
