@@ -3,9 +3,9 @@ import Layout from '../layouts/Layout.astro';
 import { DateTime } from "luxon";
 
 import { commits as bareCommits } from "../../../data.json";
-import { fetchCommits } from '../logic/fetch_commit';
+import { BareCommit, fetchCommits } from '../logic/fetch_commit';
 
-const commits = await fetchCommits(bareCommits);
+const commits = await fetchCommits(bareCommits as BareCommit[]);
 
 ---
 
