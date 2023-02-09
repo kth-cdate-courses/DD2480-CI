@@ -2,7 +2,7 @@
 	"commits": [
 		{
 			"sha": "81b0a2439191e4b6add8c08a628f9c344584a76b",
-			"success": true,
+			"status": "success",
 			"log": "But how to get the pass or fail status for each test case in stdout. like\nProcessModel: Default DomainUsage: Single\nExecution Runtime: net-3.5\n***** Application.Test.TestARule :passed\n***** Application.Test.TestConstructor :passed\n***** Application.Test..TestEvaluating :passed\nTests run: 3, Errors: 0, Failures: 0, Inconclusive: 0, Time: 0.23005096791134 seconds\nNot run: 0, Invalid: 0, Ignored: 0, Skipped: 0"
 		}
 	]
