@@ -1,26 +1,27 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { DateTime } from "luxon";
 
 import { commits as bareCommits } from "../../../data.json";
 import { BareCommit, fetchCommits } from '../logic/fetch_commit';
+import { getContributors } from '../logic/fetch_contributors';
+import CommitCard from '../components/CommitCard.astro';
 
 const commits = await fetchCommits(bareCommits as BareCommit[]);
-
+const contributors = await getContributors()
 ---
 
 <Layout title="CI Server commits">
 	<main>
-		<h1>CI Server commits</h1>
+		<div class="header-container">
+			<h1>CI Server commits</h1>
+			<h3>{contributors.map(current => current.login).join(", ")}</h3>
+		</div>
+
 		<div class="inner-content">
 			{commits.map((commit) => (
-				<div>
-					<p>{commit.commit.message.split("\n")[0]}</p>
-					<p>{commit.sha}</p>
-					<p>{DateTime.fromISO(commit.commit.author?.date!).toFormat("hh:mm d MMMM yyyy")}</p>
-					<p>{commit.success == null ? "unset" : commit.success ? "success" : "failure"}</p>
-					<p>{commit.commit.author?.name ?? commit.commit.author?.email}</p>
-				</div>
+				<CommitCard 
+					commit={commit}
+				/>
 			))}
 		</div>
 	</main>
@@ -30,6 +31,13 @@ const commits = await fetchCommits(bareCommits as BareCommit[]);
 
 	h1 {
 		text-align: center;
+		margin: 0;
+	}
+	h3 {
+		text-align: center;
+		font-weight: 200;
+	}
+	.header-container {
 		margin-bottom: 5rem;
 	}
 	main {
