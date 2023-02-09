@@ -27,6 +27,8 @@ jobs:
           path: status-site
           node-version: 16
           package-manager: pnpm
+        env:
+          GB_ACCESS_TOKEN: ${{ secrets.GB_ACCESS_TOKEN }}
 
   deploy:
     needs: build
