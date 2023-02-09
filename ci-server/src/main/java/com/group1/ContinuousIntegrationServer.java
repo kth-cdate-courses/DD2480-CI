@@ -4,9 +4,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletException;
 
-import java.io.File;
+
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.io.File;
 import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -42,7 +43,7 @@ public class ContinuousIntegrationServer extends AbstractHandler {
      * 
      * @param request contains information on the event and the repository
      */
-    void downloadCode(HttpServletRequest request){
+    static void downloadCode(HttpServletRequest request){
         try {
         URL repoUrl = new URL(RequestExtraction.getRepositoryUrlFromRequest(request));
         Path repoFolder = Paths.get("./watched-repository");
@@ -62,7 +63,7 @@ public class ContinuousIntegrationServer extends AbstractHandler {
      * @param repoFolder path to the folder where the repository will be cloned
      * @param outputFile file to save the output
      */
-    void cloneRepository(URL repoUrl, Path repoFolder, File outputFile) {
+    static void cloneRepository(URL repoUrl, Path repoFolder, File outputFile) {
         ProcessBuilder processBuilder = new ProcessBuilder("bash", "-c", "cd " + repoFolder.toString() + " && git clone " + repoUrl.toString());
         processBuilder.redirectOutput(outputFile);
         try {
