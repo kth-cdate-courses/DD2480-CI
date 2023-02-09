@@ -3,8 +3,15 @@ package com.group1;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.text.ParseException;
 
 import org.junit.Test;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * Unit test for simple App.
@@ -53,5 +60,26 @@ public class AppTest
         File outputFile = new File("testing_resources/tempUnitTestFile");
 
         new ContinuousIntegrationServer().compileAndRunTests(targetDir, outputFile);
+    }
+
+    @Test
+    public void testStructureOfJsonFile() throws IOException {
+        File data = new File("../data.json");
+
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode root = mapper.readTree(data);
+        JsonNode commits = root.path("commits");
+        assertTrue(commits != null && commits.isArray());
+
+        for (JsonNode commitNode : commits) {
+            JsonNode shaNode = commitNode.get("sha");
+            assertTrue(shaNode != null && shaNode.isTextual());
+
+            JsonNode statusNode = commitNode.get("status");
+            assertTrue(statusNode != null && statusNode.isTextual());
+
+            JsonNode logNode = commitNode.get("log");
+            assertTrue(logNode != null && logNode.isTextual());
+        }
     }
 }
