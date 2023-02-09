@@ -6,12 +6,16 @@ import java.io.IOException;
 import java.util.regex.Pattern;
 
 public class Output_parser {
-    /*
+
+    /**
      * takes in a file handle as an argument and returns either:
-     * State.COMPILE_FAILURE enum if the file provided contains the regex "BUILD FAILURE".
-     * State.SUCCESS  enum if the file provided contains the regex "Failures: 0".
-     * Status.TEST_FAILED enum if the file provided contains the regex "Failures: [^0]+".
-     * throws FileParsingFailedException in case none of the above conditions is met.
+     * State.COMPILE_FAILURE enum if the file provided at some point matches the regex "BUILD FAILURE",
+     * State.SUCCESS  enum if the file provided at some point matches regex the "Failures: 0",
+     * Status.TEST_FAILED enum if the file provided at some point matches the regex "Failures: [^0]+".
+     *
+     * @param  file a file which contains the output log from building/testing a maven project
+     * @return a State enum, as specified above
+     * @throws FileParsingFailedException if none of above conditions are met or if file does not exist
      */
     public static Status output_file_state_parser(File file) throws FileParsingFailedException {
         Pattern compileFailurePattern = Pattern.compile("BUILD FAILURE");
