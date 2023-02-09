@@ -19,9 +19,9 @@ export async function fetchCommits(
       (bareCommit) => bareCommit.sha === commit.sha
     )
     return {
-      ...commit,
-      status: bareCommit?.status ?? "unset",
-      log: bareCommit?.log,
+        ...commit,
+        status: bareCommit?.status ?? "unset",
+        log: bareCommit?.log,
     } as ExtendedCommit
   })
 }
