@@ -1,6 +1,6 @@
 import type { BareCommit } from "./fetch_commit"
 
-export type ExtendedCommit = Commit & (Omit<BareCommit, "sha"> | never)
+export type ExtendedCommit = Commit & BareCommit
 
 export interface Commit {
   url: string
