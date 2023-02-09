@@ -11,36 +11,33 @@ public class Output_parser {
      * State.COMPILE_FAILURE enum if the file provided contains the regex "BUILD FAILURE".
      * State.SUCCESS  enum if the file provided contains the regex "Failures: 0".
      * Status.TEST_FAILED enum if the file provided contains the regex "Failures: [^0]+".
-     * Status.DOWNLOAD_FAILED enum if none of the above conditions can be met or if the method throws an IOException.
+     * throws FileParsingFailedException in case none of the above conditions is met.
      */
-    public static Status output_file_state_parser(File file) {
+    public static Status output_file_state_parser(File file) throws FileParsingFailedException {
         Pattern compileFailurePattern = Pattern.compile("BUILD FAILURE");
         Pattern successPattern = Pattern.compile("Failures: 0");
         Pattern testFailurePattern = Pattern.compile("Failures: [^0]+");
-        Status outToken = Status.DOWNLOAD_FAILED;
-        BufferedReader br;
         try {
-            br = new BufferedReader(new FileReader(file));
+            BufferedReader br = new BufferedReader(new FileReader(file));
             String line = br.readLine();
             while(line != null) {
                 if(compileFailurePattern.matcher(line).find()) {
-                    outToken = Status.COMPILE_FAILED;
-                    break;
+                    br.close();
+                    return Status.COMPILE_FAILED;
                 }
                 if(successPattern.matcher(line).find()) {
-                    outToken = Status.SUCCESS;
-                    break;
+                    br.close();
+                    return Status.SUCCESS;
                 }
                 if(testFailurePattern.matcher(line).find()) {
-                    outToken = Status.TEST_FAILED;
-                    break;
+                    br.close();
+                    return Status.TEST_FAILED;
                 }
                 line = br.readLine();
             }
-            br.close();
-            return outToken;
         } catch(IOException e) {
-            return Status.DOWNLOAD_FAILED;
+            throw new FileParsingFailedException();
         }
+        throw new FileParsingFailedException();
     }
 }
