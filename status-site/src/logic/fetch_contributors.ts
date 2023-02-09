@@ -7,7 +7,7 @@ export async function getContributors() {
       "https://api.github.com/repos/kth-cdate-courses/DD2480-ci/contributors",
       {
         headers: {
-          Authorization: `Bearer ${import.meta.env.GITHUB_ACCESS_TOKEN}`,
+          Authorization: `Bearer ${import.meta.env.GH_ACCESS_TOKEN}`,
         },
       }
     )
