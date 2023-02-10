@@ -43,7 +43,7 @@ public class ContinuousIntegrationServer extends AbstractHandler {
      * 
      * @param request contains information on the event and the repository
      */
-    static void downloadCode(HttpServletRequest request){
+    static void downloadCode(HttpServletRequest request) throws DownloadFailedException {
         try {
         URL repoUrl = new URL(RequestExtraction.getRepositoryUrlFromRequest(request));
         File repoDirectoryPath = new File("./watched-repository");
@@ -63,7 +63,7 @@ public class ContinuousIntegrationServer extends AbstractHandler {
      * @param repoDirectory file path to the folder where the repository will be cloned
      * @param outputFile file to save the output
      */
-    static void cloneRepository(URL repoUrl, File repoDirectory, File outputFile) {
+    static void cloneRepository(URL repoUrl, File repoDirectory, File outputFile) throws DownloadFailedException {
         ProcessBuilder processBuilder = new ProcessBuilder("bash", "-c", "cd " + repoDirectory.toString() + "&& rm * && git clone " + repoUrl.toString());
         processBuilder.redirectOutput(outputFile);
         try {
@@ -73,8 +73,10 @@ public class ContinuousIntegrationServer extends AbstractHandler {
             }
         } catch (IOException e) {
             e.printStackTrace();
+            throw new DownloadFailedException();
         } catch (InterruptedException e) {
             e.printStackTrace();
+            throw new DownloadFailedException();
         }
     }
 
