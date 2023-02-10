@@ -8,8 +8,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.io.File;
 import java.net.URL;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import org.apache.commons.io.FileUtils;
 
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.Request;
@@ -62,6 +61,28 @@ public class ContinuousIntegrationServer extends AbstractHandler {
         } catch (IOException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Totally empties directory with the given path.
+     * If the directory does not exists, creates it.
+     * 
+     * @param dirPath path to the directory to empty
+     */
+    static void emptyOrCreateDirectory(File dirPath){
+        try{
+            if (dirPath.exists()){
+                // if it exists, empty the directory
+                FileUtils.cleanDirectory(dirPath);
+            }
+            else {
+                // if it doesn't exist, create the directory
+                dirPath.mkdir();
+            }    
+        }
+        catch (IOException e) {
             e.printStackTrace();
         }
     }
