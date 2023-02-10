@@ -64,7 +64,7 @@ public class ContinuousIntegrationServer extends AbstractHandler {
      * @param outputFile file to save the output
      */
     static void cloneRepository(URL repoUrl, File repoDirectory, File outputFile) {
-        ProcessBuilder processBuilder = new ProcessBuilder("bash", "-c", "cd " + repoDirectory.toString() + " && git clone " + repoUrl.toString());
+        ProcessBuilder processBuilder = new ProcessBuilder("bash", "-c", "cd " + repoDirectory.toString() + "&& rm * && git clone " + repoUrl.toString());
         processBuilder.redirectOutput(outputFile);
         try {
             Process p = processBuilder.start();
