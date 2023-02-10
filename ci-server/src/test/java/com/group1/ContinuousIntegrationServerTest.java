@@ -16,7 +16,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 /**
  * Unit test for simple App.
  */
-public class AppTest {
+public class ContinuousIntegrationServerTest 
+{
     /**
      * Rigorous Test :-)
      */
