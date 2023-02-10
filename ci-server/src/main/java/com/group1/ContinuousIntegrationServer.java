@@ -46,9 +46,9 @@ public class ContinuousIntegrationServer extends AbstractHandler {
     static void downloadCode(HttpServletRequest request){
         try {
         URL repoUrl = new URL(RequestExtraction.getRepositoryUrlFromRequest(request));
-        Path repoFolder = Paths.get("./watched-repository");
+        String repoDirectoryPath = "./watched-repository";
         File outputFile = new File("./dowloadOutput.txt");
-        cloneRepository(repoUrl, repoFolder, outputFile);
+        cloneRepository(repoUrl, repoDirectoryPath, outputFile);
         }
         catch (MalformedURLException e) {
             e.printStackTrace();
@@ -60,11 +60,11 @@ public class ContinuousIntegrationServer extends AbstractHandler {
      * Redirects the output to the given output file.
      * 
      * @param repoUrl url of the Git repository
-     * @param repoFolder path to the folder where the repository will be cloned
+     * @param repoDirectory string path to the folder where the repository will be cloned
      * @param outputFile file to save the output
      */
-    static void cloneRepository(URL repoUrl, Path repoFolder, File outputFile) {
-        ProcessBuilder processBuilder = new ProcessBuilder("bash", "-c", "cd " + repoFolder.toString() + " && git clone " + repoUrl.toString());
+    static void cloneRepository(URL repoUrl, String repoDirectory, File outputFile) {
+        ProcessBuilder processBuilder = new ProcessBuilder("bash", "-c", "cd " + repoDirectory + " && git clone " + repoUrl.toString());
         processBuilder.redirectOutput(outputFile);
         try {
             Process p = processBuilder.start();
