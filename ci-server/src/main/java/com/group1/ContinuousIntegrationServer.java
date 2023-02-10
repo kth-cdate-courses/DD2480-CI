@@ -97,6 +97,7 @@ public class ContinuousIntegrationServer extends AbstractHandler {
         URL repoUrl = new URL(RequestExtraction.getRepositoryUrlFromRequest(request));
         File repoDirectoryPath = new File("./watched-repository");
         File outputFile = new File("./dowloadOutput.txt");
+        emptyOrCreateDirectory(repoDirectoryPath);
         cloneRepository(repoUrl, repoDirectoryPath, outputFile);
         }
         catch (MalformedURLException e) {
@@ -105,15 +106,16 @@ public class ContinuousIntegrationServer extends AbstractHandler {
     }
 
     /**
-     * Clones the watched repository to a given folder in the project.
+     * Clones the watched repository to a given directory in the project.
      * Redirects the output to the given output file.
+     * Requires the indicated directory to exist and be empty.
      * 
      * @param repoUrl url of the Git repository
      * @param repoDirectory file path to the folder where the repository will be cloned
      * @param outputFile file to save the output
      */
     static void cloneRepository(URL repoUrl, File repoDirectory, File outputFile) throws DownloadFailedException {
-        ProcessBuilder processBuilder = new ProcessBuilder("bash", "-c", "cd " + repoDirectory.toString() + "&& rm * && git clone " + repoUrl.toString());
+        ProcessBuilder processBuilder = new ProcessBuilder("bash", "-c", "cd " + repoDirectory.toString() + " && git clone " + repoUrl.toString());
         processBuilder.redirectOutput(outputFile);
         try {
             Process p = processBuilder.start();
