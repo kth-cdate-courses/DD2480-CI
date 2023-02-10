@@ -4,12 +4,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletException;
 
-import java.io.File;
 import java.io.IOException;
+
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.net.MalformedURLException;
+import java.io.File;
+import java.net.URL;
+import org.apache.commons.io.FileUtils;
 
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.Request;
@@ -88,6 +92,72 @@ public class ContinuousIntegrationServer extends AbstractHandler {
             e.printStackTrace();
         } catch (InterruptedException e) {
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * Totally empties directory with the given path.
+     * If the directory does not exists, creates it.
+     * 
+     * @param dirPath path to the directory to empty
+     */
+    static void emptyOrCreateDirectory(File dirPath){
+        try{
+            if (dirPath.exists()){
+                // if it exists, empty the directory
+                FileUtils.cleanDirectory(dirPath);
+            }
+            else {
+                // if it doesn't exist, create the directory
+                dirPath.mkdir();
+            }    
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Downloads the code of the repository which triggered a request.
+     * 
+     * @param request contains information on the event and the repository
+     */
+    static void downloadCode(HttpServletRequest request) throws DownloadFailedException {
+        try {
+        URL repoUrl = new URL(RequestExtraction.getRepositoryUrlFromRequest(request));
+        File repoDirectoryPath = new File("./watched-repository");
+        File outputFile = new File("./dowloadOutput.txt");
+        emptyOrCreateDirectory(repoDirectoryPath);
+        cloneRepository(repoUrl, repoDirectoryPath, outputFile);
+        }
+        catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Clones the watched repository to a given directory in the project.
+     * Redirects the output to the given output file.
+     * Requires the indicated directory to exist and be empty.
+     * 
+     * @param repoUrl url of the Git repository
+     * @param repoDirectory file path to the folder where the repository will be cloned
+     * @param outputFile file to save the output
+     */
+    static void cloneRepository(URL repoUrl, File repoDirectory, File outputFile) throws DownloadFailedException {
+        ProcessBuilder processBuilder = new ProcessBuilder("bash", "-c", "cd " + repoDirectory.toString() + " && git clone " + repoUrl.toString());
+        processBuilder.redirectOutput(outputFile);
+        try {
+            Process p = processBuilder.start();
+            while (p.isAlive()) {
+                Thread.sleep(1000);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new DownloadFailedException();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            throw new DownloadFailedException();
         }
     }
 
