@@ -13,10 +13,11 @@ import org.junit.Test;
 public class AppTest 
 {
      /**
-     * Tests that the repository where we cloned the git project is not empty
+     * Positive test for method cloneRepository.
+     * Tests that the repository where we cloned the git project is not empty.
      */
     @Test
-    public void repositoryNotEmptyCloningTest()
+    public void repositoryNotEmptyCloningTest() throws DownloadFailedException
     {
         try{
         URL repoUrl = new URL("git@github.com:kth-cdate-courses/DD2480-CI.git");
