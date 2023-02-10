@@ -40,7 +40,13 @@ We also spent a good amount of time pair programming, which is reflected in comm
 
 ## Use project, compile, test and run
 
-## Essence: assessment of our Way of Working
+## Essence: assessment of our Team
+
+We feel that we have reached the Collaboring state, because we have identified the frame in which we work as a team and the external collaborators we work with, we know each other's competencies and preferences in the way of working. We feel that we trust each other, although it has only been two weeks since we started working as a team so we still have a lot to learn about each other. 
+We have very clear governance rules because we decided that we did not want to have a group leader but rather all take the same role in the team, with the common responsability of participating in group meetings, of carrying one's agreed-upon part of the project, of helping each other, asking questions when needed and stay aware of potentiel issues with the project and our way of working. We also have clear communication channels with a discord discussion, online meetings to synchronize our tasks regularly, and meetings in real life.
+We feel that we managed to create an open communication in the sense that we are always aware of how everyone's status in terms of their tasks and their availability, we give feedback to each other through code reviews, and we are not afraid to ask our teammates for help when we need it.
+
+We don't think we have reached the Performing state yet, because we are still a very young team, for instance we cannot say that we fulfill our tasks consistently since it has only been two projects. We still ask for help on our projects, but we also identified many problems during the development of our CI-server and we managed to solve many of them together. One thing that we should probably work on as a team is to identify wasted effort, because we didn't take the time to reflect on that during our work on this project.
 
 ### Conventions (suggested)
 Branch namings: `<name>/<type>/<issue-number>-<descriptive branch name>`  
