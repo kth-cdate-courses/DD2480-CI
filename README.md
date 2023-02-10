@@ -36,7 +36,7 @@ split up as follows:
 * Hampus: wrote the functionality for- and designed the web-application that displays the results of build/testing. Also wrote functionality for interacting with Github APIs.
 * Pauline: functionality for cloning repositories from github to the ci-server, and corresponding tests.
 
-We also spent a good amount of time pair programming, which is reflected in commits with co-authors.
+We also spent a good amount of time pair programming, which is reflected in commits with co-authors!
 
 ## Use project, compile, test and run
 
