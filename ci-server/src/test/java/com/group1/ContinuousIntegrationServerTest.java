@@ -1,23 +1,84 @@
 package com.group1;
 
-import static org.junit.Assert.assertTrue;
-
+import java.net.URL;
 import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import org.apache.commons.io.FileUtils;
 
+import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 /**
- * Unit test for simple App.
+ * Unit testing for the ContinuousIntegrationServer class
  */
 public class ContinuousIntegrationServerTest 
 {
     /**
-     * Rigorous Test :-)
+     * Test for method emptyOrCreateRepository.
+     * Tests that the given repository is emptied if it exists
      */
     @Test
-    public void shouldAnswerWithTrue()
+    public void repositoryEmptiedTest() {
+        try{
+            File dir = new File("./file_test");
+            File test_file = new File(dir, "test_file.txt");
+            test_file.createNewFile();
+
+            ContinuousIntegrationServer.emptyOrCreateDirectory(dir);
+            String[] files = dir.list();
+            assertTrue(files.length == 0);
+        }
+        catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+    
+    /**
+     * Test for method emptyOrCreateRepository.
+     * Tests that the given repository is created if it does not exist
+     */
+    @Test
+    public void repositoryCreatedTest() {
+        File dir = new File("./file_test");
+
+        dir.delete();
+        ContinuousIntegrationServer.emptyOrCreateDirectory(dir);
+        assertTrue(dir.exists());
+    }
+
+     /**
+     * Positive test for method cloneRepository.
+     * Tests that the repository where we cloned the git project is not empty.
+     */
+    @Test
+    public void repositoryNotEmptyCloningTest() throws DownloadFailedException
     {
-        assertTrue( true );
+        try{
+        URL repoUrl = new URL("git@github.com:kth-cdate-courses/DD2480-CI.git");
+        File repoDirectory = new File("./watched-repository");
+        File outputFile = new File("./dowloadOutput.txt");
+
+        ContinuousIntegrationServer.cloneRepository(repoUrl, repoDirectory, outputFile);
+        String[] files = repoDirectory.list();
+        assertTrue(files.length > 0);
+        }
+        catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Negative test for method cloneRepository.
+     * The url of the repo was not found ie is null.
+     */
+    @Test(expected = NullPointerException.class)
+    public void noRepoUrlCloningTest() throws DownloadFailedException
+    {
+        File repoDirectory = new File("./watched-repository");
+        File outputFile = new File("./dowloadOutput.txt");
+
+        ContinuousIntegrationServer.cloneRepository(null, repoDirectory, outputFile);
     }
 
     @Test
