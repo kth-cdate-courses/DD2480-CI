@@ -96,4 +96,14 @@ public class ContinuousIntegrationServerTest
         File file = new File("testing_resources");
         new ContinuousIntegrationServer().appendCommit(file, new Commit("1", "2", "3"));
     }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void appendCommit_throws_exception_for_json_file_without_top_level_commit_attribute() throws IOException {
+        File jsonFile = new File("testing_resources/json_unit_testing/appendCommit_test.json");
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode data = mapper.createObjectNode();
+        mapper.writeValue(jsonFile, data);
+
+        new ContinuousIntegrationServer().appendCommit(jsonFile, new Commit("1", "1", "1"));
+    }
 }

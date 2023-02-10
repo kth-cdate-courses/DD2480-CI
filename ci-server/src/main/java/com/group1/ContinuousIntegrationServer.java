@@ -85,6 +85,8 @@ public class ContinuousIntegrationServer extends AbstractHandler {
             ObjectMapper mapper = new ObjectMapper();
             JsonNode dataFile = mapper.readTree(file);
             ArrayNode commits = (ArrayNode) dataFile.get("commits");
+            if (commits == null)
+                throw new IllegalArgumentException("Json file does not have top-level 'commits' attribute");
             commits.addPOJO(commit);
             mapper.writeValue(file, dataFile);
         } catch (IOException e) {
