@@ -26,6 +26,17 @@ root
     |   └── ...
     └── README.md  
 ```
+## Statement of contributions
+The work was split up as evenly as possible for each team member. We started of the project by deciding on a basic structure.
+During this process, we thought out which functionality we needed to implement, and how to divide the functionality into separate methods. The work was then
+split up as follows:
+
+* Edward: wrote the method and test for scanning files that contain the console output messages when building/testing maven projects. Also worked on README files.
+* Erik: functionality for building and running tests on downloading maven projects. Also wrote corresponding tests. Also spend alot of time helping other group members.
+* Hampus: wrote the functionality for- and designed the web-application that displays the results of build/testing. Also wrote functionality for interacting with Github APIs.
+* Pauline: functionality for cloning repositories from github to the ci-server, and corresponding tests.
+
+We also spent a good amount of time pair programming, which is reflected in commits with co-authors.
 
 ## Use project, compile, test and run
 
