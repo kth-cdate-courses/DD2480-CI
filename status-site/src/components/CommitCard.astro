@@ -1,0 +1,148 @@
+---
+import { DateTime } from "luxon"
+import type { ExtendedCommit } from "../logic/github.commit.types";
+
+interface Props {
+  commit: ExtendedCommit
+}
+
+const { commit } = Astro.props
+---
+
+<div class="container">
+  <div class="card-header">
+    {commit.commit.author?.date != null ? <p class="datetext card-header-text">{DateTime.fromISO(commit.commit.author?.date).toFormat("HH:mm, d MMMM yyyy")}</p> : null}
+    <p class="card-header-text">{commit.sha}</p>
+  </div>
+  <div class="card">
+    <div class="grid-container">
+      <div class="grid-left-container">
+        <p class="commitmsg">{commit.commit.message.split("\n")[0]}</p>
+        <div class="authorrow-container">
+          <div class="author-container">
+            <img class="author-image" src={commit.author?.avatar_url} />
+            <a href={`https://github.com/${commit.commit.author?.name}`} class="authortext">{commit.commit.author?.name}</a>
+            {
+              commit.status === "unset" ? null : commit.status === "success" ? (
+                <p class="build-info success">Build passed</p>
+              ) : (
+                <p class="build-info fail">Build failed</p>
+              )
+            }
+          </div>
+        </div>
+      </div>
+      <div class="link-container">
+          <div class="linkrow">
+            <img class="link-image" src={"/github.svg"} />
+            <a href={commit.html_url} class="link">View commit</a>
+          </div>
+          <a href={`/${commit.sha}`} class="link">
+            <div class="primary-button">
+              <span>View build</span>
+            </div>
+          </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+
+  .card-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    color: #777;
+    font-family: monospace;
+    margin-left: 1rem;
+    margin-right: 1rem;
+    
+  }
+  .card-header-text {
+    font-size: 12px; 
+  }
+  .grid-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  .grid-left-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .container {
+    margin-top: 2rem;
+  }
+  .datetext {
+    color: #777;
+  }
+  
+	.expanded {
+		flex: 1;
+	}
+
+  .card {
+    border-width: 2px;
+    border-style: solid;
+    border-color: #e5e5e5;
+    border-radius: 5px;
+    padding: 1rem;
+    margin-top: 0.5rem;
+  }
+  .commitmsg {
+    margin: 0;
+  }
+  .authorrow-container {
+    margin-top: 1rem;
+    flex-direction: row;
+    align-items: center;
+  }
+  .author-container {
+    display: inline-flex;
+    flex-direction: row;
+    align-items: center;
+    margin-right: 1rem;
+  }
+  .author-image {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    margin-right: 0.5rem;
+  }
+
+  .authortext {
+    margin-right: 2rem;
+  }
+  
+  .link-image {
+    width: 1rem;
+    height: 1rem;
+    margin-right: 0.5rem;
+  }
+  .link-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: flex-start;
+  }
+  .linkrow {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+  .primary-button {
+    padding: 0.5rem 1rem;
+    border-radius: 10px;
+    background-color: #2F4566;
+  }
+  .primary-button:hover {
+    background-color: #486a9d;
+  }
+  .primary-button span {
+    color: white;
+  }
+</style>
