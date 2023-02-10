@@ -12,7 +12,7 @@ import org.junit.Test;
 /**
  * Unit testing for the ContinuousIntegrationServer class
  */
-public class AppTest 
+public class ContinuousIntegrationServerTest 
 {
     /**
      * Test for method emptyOrCreateRepository.
