@@ -2,7 +2,9 @@ package com.group1;
 
 import java.net.URL;
 import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
+import org.apache.commons.io.FileUtils;
 
 import static org.junit.Assert.assertTrue;
 import org.junit.Test;
@@ -12,6 +14,39 @@ import org.junit.Test;
  */
 public class AppTest 
 {
+    /**
+     * Test for method emptyOrCreateRepository.
+     * Tests that the given repository is emptied if it exists
+     */
+    @Test
+    public void repositoryEmptiedTest() {
+        try{
+            File dir = new File("./file_test");
+            File test_file = new File(dir, "test_file.txt");
+            test_file.createNewFile();
+
+            ContinuousIntegrationServer.emptyOrCreateDirectory(dir);
+            String[] files = dir.list();
+            assertTrue(files.length == 0);
+        }
+        catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+    
+    /**
+     * Test for method emptyOrCreateRepository.
+     * Tests that the given repository is created if it does not exist
+     */
+    @Test
+    public void repositoryCreatedTest() {
+        File dir = new File("./file_test");
+
+        dir.delete();
+        ContinuousIntegrationServer.emptyOrCreateDirectory(dir);
+        assertTrue(dir.exists());
+    }
+
      /**
      * Positive test for method cloneRepository.
      * Tests that the repository where we cloned the git project is not empty.
