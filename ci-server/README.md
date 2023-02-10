@@ -16,19 +16,26 @@ root
 ├── src
 │   ├── main
 │   │   └── ...
+│   │       ├── Commit.java
 │   │       ├── ContinuousIntegrationServer.java
+│   │       ├── DownloadFailedException.java
 │   │       ├── FileParsingFailedException.java    
-│   │       ├── Output_parser.java        
+│   │       ├── Output_parser.java
+│   │       ├── RequestExtraction.java
 │   │       └── Status.java           
 │   │          
 │   └── test
 │       └── ...
-│           ├── AppTest.java
-│           └── Output_parserTest.java            
+│           ├── ContinuousIntegrationServerTest.java
+│           ├── Output_parserTest.java
+│           └── RequestExtractionText.java
 │
 ├── testing_resources
 │   ├── compileFail.txt
+│   ├── json_unit_testing
+│   ├── └──...
 │   ├── maven_project_for_unit_testing
+│   ├── └──...
 │   ├── tempUnitTestFile
 │   ├── testFail.txt
 │   └── testSuccess.txt
