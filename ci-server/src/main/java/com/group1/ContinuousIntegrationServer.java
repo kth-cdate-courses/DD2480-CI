@@ -10,6 +10,8 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.nio.file.Files;
+import java.util.List;
 import java.net.MalformedURLException;
 import java.io.File;
 import java.net.URL;
@@ -35,15 +37,52 @@ public class ContinuousIntegrationServer extends AbstractHandler {
         response.setStatus(HttpServletResponse.SC_OK);
         baseRequest.setHandled(true);
 
-        System.out.println(target);
+        try {
+            downloadCode(request);
+        } catch (DownloadFailedException e) {
+            e.printStackTrace();
+            System.out.println("\n\n\n ERROR REPO DOWNLOAD FAILED!!! NOT ABLE TO DO TASK \n\n\n");
+            return;
+        }
 
-        // here you do all the continuous integration tasks
-        // for example
-        // 1st clone your repository
-        // 2nd compile the code
+        File testResultsOutputFile = new File(".testResultOutput");
+        File repoToTest = new File("./watched-repository");
+        repoToTest = repoToTest.listFiles()[0];
+        compileAndRunTests(repoToTest, testResultsOutputFile);
+        
+        Status testStatus;
+        try {
+            testStatus = Output_parser.output_file_state_parser(testResultsOutputFile);
+        } catch (FileParsingFailedException e) {
+            e.printStackTrace();
+            return;
+        }
 
-        // EDIT THESE VARIABLES TO ACTUALLY BE HOOKED UP TO THE COMMIT LATER
-        updateCommitStatusOnGithub("SOMETHING SOMETHING", false /* EDIT THIS LATER */);
+        // update github status
+        String HEADcommitSHA = RequestExtraction.getLatestCommitSHA(request);
+        if (testStatus == Status.SUCCESS) {
+            updateCommitStatusOnGithub(HEADcommitSHA, true);
+        } else {
+            updateCommitStatusOnGithub(HEADcommitSHA, false);
+        }
+
+        // deploy site
+        String deployArgs = HEADcommitSHA + " " + testStatus.toString() + " " + "'" + getLogs(testResultsOutputFile) + "'";
+        ProcessBuilder processBuilder = new ProcessBuilder("bash", "-c", "deploy.sh " + deployArgs);
+        processBuilder.directory(new File("../"));
+        Process p = processBuilder.start();
+    }
+
+    public String getLogs(File file) {
+        StringBuilder sb = new StringBuilder();
+        try {
+            for (String s : Files.readAllLines(file.toPath())) {
+                sb.append(s);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return sb.toString();
     }
 
     public static boolean updateCommitStatusOnGithub(String commitSHA, boolean success) {
