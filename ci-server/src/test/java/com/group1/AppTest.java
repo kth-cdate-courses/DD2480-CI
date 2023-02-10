@@ -37,7 +37,7 @@ public class AppTest
      * Negative test for method cloneRepository.
      * The url of the repo was not found ie is null.
      */
-    @Test
+    @Test(expected = NullPointerException.class)
     public void noRepoUrlCloningTest() throws DownloadFailedException
     {
         File repoDirectory = new File("./watched-repository");
