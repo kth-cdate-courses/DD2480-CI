@@ -5,6 +5,11 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletException;
 
 import java.io.IOException;
+
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.net.MalformedURLException;
 import java.io.File;
 import java.net.URL;
@@ -33,7 +38,32 @@ public class ContinuousIntegrationServer extends AbstractHandler {
         // 1st clone your repository
         // 2nd compile the code
 
-        response.getWriter().println("CI job done");
+        // EDIT THESE VARIABLES TO ACTUALLY BE HOOKED UP TO THE COMMIT LATER
+        updateCommitStatusOnGithub("SOMETHING SOMETHING", false /* EDIT THIS LATER */);
+    }
+
+    public static boolean updateCommitStatusOnGithub(String commitSHA, boolean success) {
+        String status = success ? "success" : "fail";
+
+        if (System.getenv("GITHUB_API_TOKEN") == null) {
+            return false;
+        }
+
+        HttpRequest httpRequest = HttpRequest.newBuilder()
+            .uri(URI.create("https://api.github.com/repos/kth-cdate-courses/DD2480-CI/statuses/" + commitSHA))
+            .header("Authorization", "Bearer " + System.getenv("GITHUB_API_TOKEN"))
+            .header("Content-Type", "application/json")
+            .POST(HttpRequest.BodyPublishers.ofString("{\"status\":\"" + status + "\"}"))
+            .build();
+
+        try {
+            HttpClient.newHttpClient().send(httpRequest, HttpResponse.BodyHandlers.ofString());
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return true;
     }
 
     /**
