@@ -11,7 +11,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 public class RequestExtraction {
     
     public static String getRepositoryUrlFromRequest(HttpServletRequest request){
-        return request.getParameter("ssh_url");
+        return request.getParameter("clone_url");
     }
 
     public static String getLatestCommitSHA(HttpServletRequest request) {

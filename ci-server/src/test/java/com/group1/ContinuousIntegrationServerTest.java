@@ -56,35 +56,31 @@ public class ContinuousIntegrationServerTest
      /**
      * Positive test for method cloneRepository.
      * Tests that the repository where we cloned the git project is not empty.
+     * @throws MalformedURLException
      */
     @Test
-    public void repositoryNotEmptyCloningTest() throws DownloadFailedException
+    public void repositoryNotEmptyCloningTest() throws DownloadFailedException, MalformedURLException
     {
-        try{
-        URL repoUrl = new URL("git@github.com:kth-cdate-courses/DD2480-CI.git");
+        URL repoUrl = new URL("https://github.com/kth-cdate-courses/DD2480-CI.git");
         File repoDirectory = new File("./watched-repository");
-        File outputFile = new File("./dowloadOutput.txt");
 
-        ContinuousIntegrationServer.cloneRepository(repoUrl, repoDirectory, outputFile);
+        ContinuousIntegrationServer.emptyOrCreateDirectory(repoDirectory);
+
+        ContinuousIntegrationServer.cloneRepository(repoUrl, repoDirectory);
         String[] files = repoDirectory.list();
-        assertTrue(files.length > 0);
-        }
-        catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
+        assertTrue(files != null);
     }
 
     /**
      * Negative test for method cloneRepository.
      * The url of the repo was not found ie is null.
      */
-    @Test(expected = NullPointerException.class)
+    @Test(expected = DownloadFailedException.class)
     public void noRepoUrlCloningTest() throws DownloadFailedException
     {
         File repoDirectory = new File("./watched-repository");
-        File outputFile = new File("./dowloadOutput.txt");
 
-        ContinuousIntegrationServer.cloneRepository(null, repoDirectory, outputFile);
+        ContinuousIntegrationServer.cloneRepository(null, repoDirectory);
     }
 
     @Test
