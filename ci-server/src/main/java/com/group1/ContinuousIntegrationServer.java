@@ -19,6 +19,10 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+
 /**
  * Skeleton of a ContinuousIntegrationServer which acts as webhook
  * See the Jetty documentation for API documentation of those classes.
@@ -26,7 +30,7 @@ import org.eclipse.jetty.server.handler.AbstractHandler;
 public class ContinuousIntegrationServer extends AbstractHandler {
     public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {
-        
+
         response.setContentType("text/html;charset=utf-8");
         response.setStatus(HttpServletResponse.SC_OK);
         baseRequest.setHandled(true);
@@ -96,9 +100,36 @@ public class ContinuousIntegrationServer extends AbstractHandler {
     }
 
     /**
-     * Totally empties directory with the given path.
-     * If the directory does not exists, creates it.
+     * Tries to append a commit to a json file with a list of commits.
      * 
+     * It is assumed that the json file contains a list tagged "commits" in the top
+     * level.
+     * 
+     * @param file   json file
+     * @param commit commit to be appended
+     * @throws IllegalArgumentException Must be a .json file
+     */
+    void appendCommit(File file, Commit commit) throws IllegalArgumentException {
+        boolean isJsonFile = file.getName().endsWith(".json");
+        if (!file.exists() || !isJsonFile)
+            throw new IllegalArgumentException("Not a json file");
+
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode dataFile = mapper.readTree(file);
+            ArrayNode commits = (ArrayNode) dataFile.get("commits");
+            if (commits == null)
+                throw new IllegalArgumentException("Json file does not have top-level 'commits' attribute");
+            commits.addPOJO(commit);
+            mapper.writeValue(file, dataFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Totally empties directory with the given path.
+     * If the directory does not exists, creates it.     
      * @param dirPath path to the directory to empty
      */
     static void emptyOrCreateDirectory(File dirPath){
