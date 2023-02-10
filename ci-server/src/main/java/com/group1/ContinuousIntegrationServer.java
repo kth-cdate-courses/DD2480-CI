@@ -20,6 +20,10 @@ import org.apache.commons.io.FileUtils;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
+import org.eclipse.jgit.api.CloneCommand;
+import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.api.errors.InvalidRemoteException;
+import org.eclipse.jgit.api.errors.TransportException;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -196,9 +200,8 @@ public class ContinuousIntegrationServer extends AbstractHandler {
         try {
         URL repoUrl = new URL(RequestExtraction.getRepositoryUrlFromRequest(request));
         File repoDirectoryPath = new File("./watched-repository");
-        File outputFile = new File("./dowloadOutput.txt");
         emptyOrCreateDirectory(repoDirectoryPath);
-        cloneRepository(repoUrl, repoDirectoryPath, outputFile);
+        cloneRepository(repoUrl, repoDirectoryPath);
         }
         catch (MalformedURLException e) {
             e.printStackTrace();
@@ -214,18 +217,22 @@ public class ContinuousIntegrationServer extends AbstractHandler {
      * @param repoDirectory file path to the folder where the repository will be cloned
      * @param outputFile file to save the output
      */
-    static void cloneRepository(URL repoUrl, File repoDirectory, File outputFile) throws DownloadFailedException {
-        ProcessBuilder processBuilder = new ProcessBuilder("bash", "-c", "cd " + repoDirectory.toString() + " && git clone " + repoUrl.toString());
-        processBuilder.redirectOutput(outputFile);
+    static void cloneRepository(URL repoUrl, File repoDirectory) throws DownloadFailedException {
+        if (repoUrl == null)
+            throw new DownloadFailedException();
+            
+        CloneCommand c = new CloneCommand();
+        c.setURI("https://github.com/kth-cdate-courses/DD2480-CI.git");
+        c.setDirectory(repoDirectory);
         try {
-            Process p = processBuilder.start();
-            while (p.isAlive()) {
-                Thread.sleep(1000);
-            }
-        } catch (IOException e) {
+            c.call();
+        } catch (InvalidRemoteException e) {
             e.printStackTrace();
             throw new DownloadFailedException();
-        } catch (InterruptedException e) {
+        } catch (TransportException e) {
+            e.printStackTrace();
+            throw new DownloadFailedException();
+        } catch (GitAPIException e) {
             e.printStackTrace();
             throw new DownloadFailedException();
         }

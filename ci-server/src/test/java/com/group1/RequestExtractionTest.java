@@ -22,7 +22,7 @@ public class RequestExtractionTest
         String testUrl = "http://test.test";
         HttpServletRequest request = mock(HttpServletRequest.class);
 
-        when(request.getParameter("ssh_url")).thenReturn(testUrl);
+        when(request.getParameter("clone_url")).thenReturn(testUrl);
 
         String repoUrl = RequestExtraction.getRepositoryUrlFromRequest(request);
         assertTrue( repoUrl.equals(testUrl));
