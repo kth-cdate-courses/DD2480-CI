@@ -32,4 +32,17 @@ public class AppTest
             e.printStackTrace();
         }
     }
+
+    /**
+     * Negative test for method cloneRepository.
+     * The url of the repo was not found ie is null.
+     */
+    @Test
+    public void noRepoUrlCloningTest() throws DownloadFailedException
+    {
+        File repoDirectory = new File("./watched-repository");
+        File outputFile = new File("./dowloadOutput.txt");
+
+        ContinuousIntegrationServer.cloneRepository(null, repoDirectory, outputFile);
+    }
 }
