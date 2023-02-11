@@ -11,4 +11,8 @@ public class RequestExtraction {
     public static String getLatestCommitSHA(JsonNode request) {
         return request.get("head_commit").get("id").toString().replaceAll("\"", ""); 
     }
+
+    public static String getBranch(JsonNode request) {
+        return request.get("ref").toString().replaceAll("\"", ""); 
+    }
 }
