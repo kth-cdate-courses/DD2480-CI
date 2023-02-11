@@ -230,7 +230,7 @@ public class ContinuousIntegrationServer extends AbstractHandler {
             throw new DownloadFailedException();
             
         CloneCommand c = new CloneCommand();
-        c.setURI("https://github.com/kth-cdate-courses/DD2480-CI.git");
+        c.setURI(repoUrl);
         c.setDirectory(repoDirectory);
         try {
             c.call();
