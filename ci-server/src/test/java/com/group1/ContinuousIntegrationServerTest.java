@@ -5,8 +5,6 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 import org.junit.Test;
 
@@ -57,12 +55,11 @@ public class ContinuousIntegrationServerTest
      * Positive test for method cloneRepository.
      * Tests that the repository where we cloned the git project is not empty.
      * @throws DownloadFailedException
-     * @throws MalformedURLException
      */
     @Test
-    public void repositoryNotEmptyCloningTest() throws DownloadFailedException, MalformedURLException
+    public void repositoryNotEmptyCloningTest() throws DownloadFailedException
     {
-        URL repoUrl = new URL("https://github.com/kth-cdate-courses/DD2480-CI.git");
+        String repoUrl = "https://github.com/kth-cdate-courses/DD2480-CI.git";
         File repoDirectory = new File("./watched-repository");
 
         ContinuousIntegrationServer.emptyOrCreateDirectory(repoDirectory);
