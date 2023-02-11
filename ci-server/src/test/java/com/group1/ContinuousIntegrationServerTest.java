@@ -5,8 +5,8 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.net.MalformedURLException;
+import java.net.URL;
 
 import org.junit.Test;
 
@@ -56,6 +56,7 @@ public class ContinuousIntegrationServerTest
      /**
      * Positive test for method cloneRepository.
      * Tests that the repository where we cloned the git project is not empty.
+     * @throws DownloadFailedException
      * @throws MalformedURLException
      */
     @Test
