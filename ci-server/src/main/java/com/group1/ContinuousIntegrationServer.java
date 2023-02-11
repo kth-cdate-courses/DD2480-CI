@@ -53,9 +53,11 @@ public class ContinuousIntegrationServer extends AbstractHandler {
             return;
         }
 
-        File testResultsOutputFile = new File(".testResultOutput");
-        File repoToTest = new File("./watched-repository");
-        repoToTest = repoToTest.listFiles()[0];
+        String prefix = "";
+        if (new File("ci-server").exists())
+            prefix = "ci-server/";
+        File testResultsOutputFile = new File(prefix + "testResultOutput");
+        File repoToTest = new File(prefix + "watched-repository/ci-server");
         compileAndRunTests(repoToTest, testResultsOutputFile);
         
         Status testStatus;
@@ -75,10 +77,10 @@ public class ContinuousIntegrationServer extends AbstractHandler {
         }
 
         // deploy site
-        String deployArgs = HEADcommitSHA + " " + testStatus.toString() + " " + "'" + getLogs(testResultsOutputFile) + "'";
-        ProcessBuilder processBuilder = new ProcessBuilder("bash", "-c", "deploy.sh " + deployArgs);
-        processBuilder.directory(new File("../"));
-        Process p = processBuilder.start();
+        // String deployArgs = HEADcommitSHA + " " + testStatus.toString() + " " + "'" + getLogs(testResultsOutputFile) + "'";
+        // ProcessBuilder processBuilder = new ProcessBuilder("bash", "-c", "deploy.sh " + deployArgs);
+        // processBuilder.redirectError(new File("builder_error_file"));
+        // Process p = processBuilder.start();        
     }
 
     public String getLogs(File file) {
@@ -133,7 +135,13 @@ public class ContinuousIntegrationServer extends AbstractHandler {
 
         ProcessBuilder processBuilder = new ProcessBuilder("bash", "-c",
                 "./mvnw -f " + targetDirectory.getAbsolutePath() + " clean test");
+        
         processBuilder.redirectOutput(outputFile);
+        // depending on from where to method is called the default path may be different
+        File ci_server_dir = new File("ci-server");
+        if (ci_server_dir.exists()) {
+            processBuilder.directory(ci_server_dir);
+        }
         try {
             Process p = processBuilder.start();
             while (p.isAlive()) {
@@ -204,6 +212,9 @@ public class ContinuousIntegrationServer extends AbstractHandler {
         try {
             URL repoUrl = new URL(RequestExtraction.getRepositoryUrlFromRequest(request));
             File repoDirectoryPath = new File("./watched-repository");
+            // needed to ensure repo is cloned into ci-server/.watched-repository
+            if (new File("ci-server").exists())
+                repoDirectoryPath = new File("ci-server/watched-repository");
             emptyOrCreateDirectory(repoDirectoryPath);
             cloneRepository(repoUrl, repoDirectoryPath);
         } catch (MalformedURLException e) {
