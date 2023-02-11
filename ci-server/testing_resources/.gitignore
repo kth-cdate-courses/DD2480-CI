@@ -1,2 +1,4 @@
 tempUnitTestFile
 maven_project_for_unit_testing/target
+json_unit_testing/*
+!json_unit_testing/*.md
