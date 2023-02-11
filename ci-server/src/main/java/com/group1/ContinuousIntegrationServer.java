@@ -53,9 +53,11 @@ public class ContinuousIntegrationServer extends AbstractHandler {
             return;
         }
 
-        // the default path when this method is called will always be DD2480-ci
-        File testResultsOutputFile = new File("ci-server/testResultOutput");
-        File repoToTest = new File("ci-server/watched-repository/ci-server");
+        String prefix = "";
+        if (new File("ci-server").exists())
+            prefix = "ci-server/";
+        File testResultsOutputFile = new File(prefix + "testResultOutput");
+        File repoToTest = new File(prefix + "watched-repository/ci-server");
         compileAndRunTests(repoToTest, testResultsOutputFile);
         
         Status testStatus;
