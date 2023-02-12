@@ -88,7 +88,7 @@ public class ContinuousIntegrationServer extends AbstractHandler {
         StringBuilder sb = new StringBuilder();
         try {
             for (String s : Files.readAllLines(file.toPath())) {
-                sb.append(s);
+                sb.append(s + "\n");
             }
         } catch (IOException e) {
             e.printStackTrace();
