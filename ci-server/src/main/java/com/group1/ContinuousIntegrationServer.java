@@ -83,7 +83,6 @@ public class ContinuousIntegrationServer extends AbstractHandler {
         Process p = processBuilder.start();
     }
 
-
     public String getLogs(File file) {
         StringBuilder sb = new StringBuilder();
         try {
@@ -97,7 +96,7 @@ public class ContinuousIntegrationServer extends AbstractHandler {
     }
 
     public static boolean updateCommitStatusOnGithub(String commitSHA, boolean success) {
-        String status = success ? "success" : "fail";
+        String status = success ? "success" : "failure";
 
         if (System.getenv("GITHUB_API_TOKEN") == null) {
             return false;
@@ -107,7 +106,7 @@ public class ContinuousIntegrationServer extends AbstractHandler {
             .uri(URI.create("https://api.github.com/repos/kth-cdate-courses/DD2480-CI/statuses/" + commitSHA))
             .header("Authorization", "Bearer " + System.getenv("GITHUB_API_TOKEN"))
             .header("Content-Type", "application/json")
-            .POST(HttpRequest.BodyPublishers.ofString("{\"status\":\"" + status + "\"}"))
+            .POST(HttpRequest.BodyPublishers.ofString("{\"state\":\"" + status + "\"}"))
             .build();
 
         try {
@@ -234,7 +233,7 @@ public class ContinuousIntegrationServer extends AbstractHandler {
             
         CloneCommand c = new CloneCommand();
         c.setURI(repoUrl);
-        c.setDirectory(repoDirectory);       
+        c.setDirectory(repoDirectory);
         try {
             c.call();
         } catch (InvalidRemoteException e) {
