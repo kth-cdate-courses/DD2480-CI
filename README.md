@@ -38,7 +38,19 @@ split up as follows:
 
 We also spent a good amount of time pair programming and gluing the project together in the end, which is reflected in commits with co-authors.
 
-## Use project, compile, test and run
+## Project setup
+### Prerequisites
+* Java 17
+* Maven
+* Node.js (with pnpm)
+* ngrok
+
+### Setup
+1. Clone the repository
+2. Run `pnpm install` in the `status-site` folder
+3. Start ngrok with `ngrok http <port>` where `<port>` is mapped to the port of the ci server.
+4. Start server by entering the ContinuousIntegrationServer.java file and run it from visualCode. This will start the server.
+
 
 ## Essence: assessment of our Team
 
