@@ -83,6 +83,7 @@ public class ContinuousIntegrationServer extends AbstractHandler {
         Process p = processBuilder.start();
     }
 
+
     public String getLogs(File file) {
         StringBuilder sb = new StringBuilder();
         try {
@@ -209,18 +210,13 @@ public class ContinuousIntegrationServer extends AbstractHandler {
      * @param request contains information on the event and the repository
      */
     static void downloadCode(JsonNode request) throws DownloadFailedException {
-        try {
-            URL repoUrl = new URL(RequestExtraction.getRepositoryUrlFromRequest(request));
-            File repoDirectoryPath = new File("./watched-repository");
-            // needed to ensure repo is cloned into ci-server/.watched-repository
-            if (new File("ci-server").exists())
-                repoDirectoryPath = new File("ci-server/watched-repository");
-
-            emptyOrCreateDirectory(repoDirectoryPath);
-            cloneRepository(repoUrl, repoDirectoryPath);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
+        String repoUrl = RequestExtraction.getRepositoryUrlFromRequest(request);
+        File repoDirectoryPath = new File("./watched-repository");
+        // needed to ensure repo is cloned into ci-server/.watched-repository
+        if (new File("ci-server").exists())
+            repoDirectoryPath = new File("ci-server/watched-repository");
+        emptyOrCreateDirectory(repoDirectoryPath);
+        cloneRepository(repoUrl, repoDirectoryPath);
     }
 
     /**
@@ -232,13 +228,13 @@ public class ContinuousIntegrationServer extends AbstractHandler {
      * @param repoDirectory file path to the folder where the repository will be cloned
      * @param outputFile file to save the output
      */
-    static void cloneRepository(URL repoUrl, File repoDirectory) throws DownloadFailedException {
+    static void cloneRepository(String repoUrl, File repoDirectory) throws DownloadFailedException {
         if (repoUrl == null)
             throw new DownloadFailedException();
             
         CloneCommand c = new CloneCommand();
-        c.setURI("https://github.com/kth-cdate-courses/DD2480-CI.git");
-        c.setDirectory(repoDirectory);
+        c.setURI(repoUrl);
+        c.setDirectory(repoDirectory);       
         try {
             c.call();
         } catch (InvalidRemoteException e) {
