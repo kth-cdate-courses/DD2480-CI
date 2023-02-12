@@ -45,6 +45,10 @@ public class ContinuousIntegrationServer extends AbstractHandler {
         request.getReader().transferTo(sw);
         JsonNode JSONrequest = new ObjectMapper().readTree(sw.toString());
         
+        if (RequestExtraction.getBranch(JSONrequest).equals("refs/heads/deployment")) {
+            System.out.println("commit from deployment script");
+            return;
+        }
 
         try {
             downloadCode(JSONrequest);
