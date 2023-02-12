@@ -57,13 +57,11 @@ public class ContinuousIntegrationServerTest
      * @throws DownloadFailedException
      */
     @Test
-    public void repositoryNotEmptyCloningTest() throws DownloadFailedException
-    {
+    public void repositoryNotEmptyCloningTest() throws DownloadFailedException, MalformedURLException {
         String repoUrl = "https://github.com/kth-cdate-courses/DD2480-CI.git";
         File repoDirectory = new File("./watched-repository");
 
         ContinuousIntegrationServer.emptyOrCreateDirectory(repoDirectory);
-
         ContinuousIntegrationServer.cloneRepository(repoUrl, repoDirectory, null);
         String[] files = repoDirectory.list();
         assertTrue(files != null);
@@ -74,8 +72,7 @@ public class ContinuousIntegrationServerTest
      * The url of the repo was not found ie is null.
      */
     @Test(expected = DownloadFailedException.class)
-    public void noRepoUrlCloningTest() throws DownloadFailedException
-    {
+    public void noRepoUrlCloningTest() throws DownloadFailedException {
         File repoDirectory = new File("./watched-repository");
 
         ContinuousIntegrationServer.cloneRepository(null, repoDirectory, null);

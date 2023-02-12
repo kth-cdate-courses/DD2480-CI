@@ -11,7 +11,7 @@ export async function fetchCommits(
   bareCommits: BareCommit[]
 ): Promise<ExtendedCommit[]> {
   const commits = await axios.get<Commit[]>(
-    `https://api.github.com/repos/kth-cdate-courses/DD2480-CI/commits`
+    `https://api.github.com/repos/kth-cdate-courses/DD2480-CI/commits?sha=assessment`
   )
   // Only include commits that we have processed
   return commits.data.map((commit) => {

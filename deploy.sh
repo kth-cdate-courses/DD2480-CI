@@ -11,8 +11,10 @@ jq --arg LOG "$3" '.commits += [{
 }]' data.json > data.temp.json
 mv data.temp.json data.json
 
+
 git add data.json
 git commit -m "fix: Automated deployment of $1"
 git push
 git switch main
 git stash pop
+
