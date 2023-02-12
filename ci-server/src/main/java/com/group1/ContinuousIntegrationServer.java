@@ -53,9 +53,11 @@ public class ContinuousIntegrationServer extends AbstractHandler {
             return;
         }
 
-        // the default path when this method is called will always be DD2480-ci
-        File testResultsOutputFile = new File("ci-server/testResultOutput");
-        File repoToTest = new File("ci-server/watched-repository/ci-server");
+        String prefix = "";
+        if (new File("ci-server").exists())
+            prefix = "ci-server/";
+        File testResultsOutputFile = new File(prefix + "testResultOutput");
+        File repoToTest = new File(prefix + "watched-repository/ci-server");
         compileAndRunTests(repoToTest, testResultsOutputFile);
         
         Status testStatus;
@@ -75,11 +77,12 @@ public class ContinuousIntegrationServer extends AbstractHandler {
         }
 
         // deploy site
-        // String deployArgs = HEADcommitSHA + " " + testStatus.toString() + " " + "'" + getLogs(testResultsOutputFile) + "'";
-        // ProcessBuilder processBuilder = new ProcessBuilder("bash", "-c", "deploy.sh " + deployArgs);
-        // processBuilder.redirectError(new File("builder_error_file"));
-        // Process p = processBuilder.start();        
+        String deployArgs = HEADcommitSHA + " " + testStatus.toString() + " " + "'" + getLogs(testResultsOutputFile) + "'";
+        ProcessBuilder processBuilder = new ProcessBuilder("bash", "-c", "deploy.sh " + deployArgs);
+        processBuilder.directory(new File("../"));
+        Process p = processBuilder.start();
     }
+
 
     public String getLogs(File file) {
         StringBuilder sb = new StringBuilder();
@@ -231,7 +234,7 @@ public class ContinuousIntegrationServer extends AbstractHandler {
             
         CloneCommand c = new CloneCommand();
         c.setURI(repoUrl);
-        c.setDirectory(repoDirectory);
+        c.setDirectory(repoDirectory);       
         try {
             c.call();
         } catch (InvalidRemoteException e) {
