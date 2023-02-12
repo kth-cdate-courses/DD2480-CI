@@ -3,3 +3,4 @@ ci-server/target/
 *.DS_Store
 ci-server/watched-repository
 ci-server/testResultOutput
+builder_error_file
