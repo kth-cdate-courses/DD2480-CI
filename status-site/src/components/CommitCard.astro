@@ -1,6 +1,7 @@
 ---
 import { DateTime } from "luxon"
 import type { ExtendedCommit } from "../logic/github.commit.types";
+import GithubLogo from "../../public/github.svg"
 
 interface Props {
   commit: ExtendedCommit
@@ -34,10 +35,10 @@ const { commit } = Astro.props
       </div>
       <div class="link-container">
           <div class="linkrow">
-            <img class="link-image" src={"/github.svg"} />
+            <img class="link-image" src={GithubLogo} />
             <a href={commit.html_url} class="link">View commit</a>
           </div>
-          <a href={`/${commit.sha}`} class="link">
+          <a href={`/DD2480-CI/${commit.sha}`} class="link">
             <div class="primary-button">
               <span>View build</span>
             </div>

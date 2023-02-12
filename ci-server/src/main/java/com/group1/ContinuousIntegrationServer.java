@@ -81,6 +81,7 @@ public class ContinuousIntegrationServer extends AbstractHandler {
         Process p = processBuilder.start();
     }
 
+
     public String getLogs(File file) {
         StringBuilder sb = new StringBuilder();
         try {
