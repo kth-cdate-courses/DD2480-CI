@@ -30,10 +30,29 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 
 /**
- * Skeleton of a ContinuousIntegrationServer which acts as webhook
- * See the Jetty documentation for API documentation of those classes.
+ * Continuous Integration Server
+ * 
+ * Behaves according to the following steps:
+ * - Gets a request from GitHub for each commit via Webhook
+ * - Clones, builds and tests the commit
+ * - Updates the status of the commit on GitHub via API
+ * 
  */
 public class ContinuousIntegrationServer extends AbstractHandler {
+
+    /**
+     * Main method to handle the processing of a commit.
+     * 
+     * For more information, see https://github.com/KTH-DD2480/smallest-java-ci.
+     * 
+     * @param target 
+     * @param baseRequest
+     * @param request
+     * @param response
+     * 
+     * @throws IOException
+     * @throws ServletException
+     */
     public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {
 
@@ -90,6 +109,12 @@ public class ContinuousIntegrationServer extends AbstractHandler {
         System.out.println("handle done, deploying site");
     }
     
+    /**
+     * Pretty printer for logs from a file.
+     * 
+     * @param file
+     * @return string representing the content of the file
+     */
     public String getLogs(File file) {
         StringBuilder sb = new StringBuilder();
         try {
