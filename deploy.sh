@@ -1,17 +1,18 @@
 #!/bin/bash
-
-jq --arg LOG "$3" '.commits[.commits | length] |= . + {
-	"sha": "'$1'",
-	"status": "'$2'",
-	"log": $LOG
-}' data.json > data.temp.json
-
+git stash
 git fetch
 git switch deployment
 git pull
-rm data.json
+
+jq --arg LOG "$3" '.commits += [{
+	"sha": "'$1'",
+	"status": "'$2'",
+	"log": $LOG
+}]' data.json > data.temp.json
 mv data.temp.json data.json
+
 git add data.json
 git commit -m "fix: Automated deployment of $1"
 git push
 git switch main
+git stash pop
