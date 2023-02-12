@@ -8,8 +8,7 @@ building/testing maven projects.
 
 ## Folder Structure
 
----
-
+```
 root
 │
 ├── README.md
@@ -40,5 +39,4 @@ root
 │   ├── testFail.txt
 │   └── testSuccess.txt
 ...
-
----
+```
