@@ -17,27 +17,30 @@ public class Output_parser {
      * @return a State enum, as specified above
      * @throws FileParsingFailedException if none of above conditions are met or if file does not exist
      */
-    public static Status output_file_state_parser(File file) throws FileParsingFailedException {
+    public static Status output_file_state_parser(File file) throws FileParsingFailedException, IOException {
         Pattern compileFailurePattern = Pattern.compile("BUILD FAILURE");
         Pattern successPattern = Pattern.compile("Failures: 0");
         Pattern testFailurePattern = Pattern.compile("Failures: [^0]+");
-        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
-            String line = br.readLine();
-            while(line != null) {
-                if(compileFailurePattern.matcher(line).find()) {
-                    return Status.COMPILE_FAILED;
-                }
-                if(successPattern.matcher(line).find()) {
-                    return Status.SUCCESS;
-                }
-                if(testFailurePattern.matcher(line).find()) {
-                    return Status.TEST_FAILED;
-                }
-                line = br.readLine();
-            }
-        } catch(IOException e) {
-            throw new FileParsingFailedException();
+        boolean compileFailureFlag = false;
+        boolean successFlag = false;
+        boolean testFailureFlag = false;
+        BufferedReader br = new BufferedReader(new FileReader(file));
+        String line = br.readLine();
+        while(line != null) {
+            if(compileFailurePattern.matcher(line).find())
+                compileFailureFlag = true;
+            if(testFailurePattern.matcher(line).find())
+                testFailureFlag = true;
+            if(successPattern.matcher(line).find())
+                successFlag = true;
+            line = br.readLine();
         }
+        if(testFailureFlag)
+            return Status.TEST_FAILED;
+        if(compileFailureFlag)
+            return Status.COMPILE_FAILED;
+        if(successFlag)
+            return Status.SUCCESS;
         throw new FileParsingFailedException();
     }
 }
