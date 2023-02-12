@@ -5,11 +5,13 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletException;
 
 import java.io.IOException;
-
+import java.io.StringWriter;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.nio.file.Files;
+import java.util.List;
 import java.net.MalformedURLException;
 import java.io.File;
 import java.net.URL;
@@ -18,6 +20,10 @@ import org.apache.commons.io.FileUtils;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
+import org.eclipse.jgit.api.CloneCommand;
+import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.api.errors.InvalidRemoteException;
+import org.eclipse.jgit.api.errors.TransportException;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -35,19 +41,69 @@ public class ContinuousIntegrationServer extends AbstractHandler {
         response.setStatus(HttpServletResponse.SC_OK);
         baseRequest.setHandled(true);
 
-        System.out.println(target);
+        StringWriter sw = new StringWriter();
+        request.getReader().transferTo(sw);
+        JsonNode JSONrequest = new ObjectMapper().readTree(sw.toString());
+        
+        if (RequestExtraction.getBranch(JSONrequest).equals("refs/heads/deployment")) {
+            System.out.println("commit from deployment script");
+            return;
+        }
 
-        // here you do all the continuous integration tasks
-        // for example
-        // 1st clone your repository
-        // 2nd compile the code
+        try {
+            System.out.println("downloading repository");
+            downloadCode(JSONrequest);
+        } catch (DownloadFailedException e) {
+            e.printStackTrace();
+            System.out.println("\n\n\n ERROR REPO DOWNLOAD FAILED!!! NOT ABLE TO DO TASK \n\n\n");
+            return;
+        }
 
-        // EDIT THESE VARIABLES TO ACTUALLY BE HOOKED UP TO THE COMMIT LATER
-        updateCommitStatusOnGithub("SOMETHING SOMETHING", false /* EDIT THIS LATER */);
+        String prefix = "";
+        if (new File("ci-server").exists())
+            prefix = "ci-server/";
+        File testResultsOutputFile = new File(prefix + "testResultOutput");
+        File repoToTest = new File(prefix + "watched-repository/ci-server");
+        compileAndRunTests(repoToTest, testResultsOutputFile);
+        
+        Status testStatus;
+        try {
+            testStatus = Output_parser.output_file_state_parser(testResultsOutputFile);
+        } catch (FileParsingFailedException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        // update github status
+        String HEADcommitSHA = RequestExtraction.getLatestCommitSHA(JSONrequest);
+        if (testStatus == Status.SUCCESS) {
+            updateCommitStatusOnGithub(HEADcommitSHA, true);
+        } else {
+            updateCommitStatusOnGithub(HEADcommitSHA, false);
+        }
+
+        // deploy site
+        String deployArgs = HEADcommitSHA + " " + testStatus.toString() + " " + "'" + getLogs(testResultsOutputFile) + "'";
+        ProcessBuilder processBuilder = new ProcessBuilder("bash", "-c", "./deploy.sh " + deployArgs);
+        processBuilder.redirectError(new File("builder_error_file"));
+        processBuilder.start();
+        System.out.println("handle done, deploying site");
+    }
+    
+    public String getLogs(File file) {
+        StringBuilder sb = new StringBuilder();
+        try {
+            for (String s : Files.readAllLines(file.toPath())) {
+                sb.append(s + "\n");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return sb.toString();
     }
 
     public static boolean updateCommitStatusOnGithub(String commitSHA, boolean success) {
-        String status = success ? "success" : "fail";
+        String status = success ? "success" : "failure";
 
         if (System.getenv("GITHUB_API_TOKEN") == null) {
             return false;
@@ -57,10 +113,11 @@ public class ContinuousIntegrationServer extends AbstractHandler {
             .uri(URI.create("https://api.github.com/repos/kth-cdate-courses/DD2480-CI/statuses/" + commitSHA))
             .header("Authorization", "Bearer " + System.getenv("GITHUB_API_TOKEN"))
             .header("Content-Type", "application/json")
-            .POST(HttpRequest.BodyPublishers.ofString("{\"status\":\"" + status + "\"}"))
+            .POST(HttpRequest.BodyPublishers.ofString("{\"state\":\"" + status + "\"}"))
             .build();
 
         try {
+            System.out.println("setting commit status on github");
             HttpClient.newHttpClient().send(httpRequest, HttpResponse.BodyHandlers.ofString());
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -86,8 +143,15 @@ public class ContinuousIntegrationServer extends AbstractHandler {
 
         ProcessBuilder processBuilder = new ProcessBuilder("bash", "-c",
                 "./mvnw -f " + targetDirectory.getAbsolutePath() + " clean test");
+        
         processBuilder.redirectOutput(outputFile);
+        // depending on from where to method is called the default path may be different
+        File ci_server_dir = new File("ci-server");
+        if (ci_server_dir.exists()) {
+            processBuilder.directory(ci_server_dir);
+        }
         try {
+            System.out.println("running tests");
             Process p = processBuilder.start();
             while (p.isAlive()) {
                 Thread.sleep(1000);
@@ -153,17 +217,15 @@ public class ContinuousIntegrationServer extends AbstractHandler {
      * 
      * @param request contains information on the event and the repository
      */
-    static void downloadCode(HttpServletRequest request) throws DownloadFailedException {
-        try {
-        URL repoUrl = new URL(RequestExtraction.getRepositoryUrlFromRequest(request));
+    static void downloadCode(JsonNode request) throws DownloadFailedException {
+        String repoUrl = RequestExtraction.getRepositoryUrlFromRequest(request);
         File repoDirectoryPath = new File("./watched-repository");
-        File outputFile = new File("./dowloadOutput.txt");
+        // needed to ensure repo is cloned into ci-server/.watched-repository
+        if (new File("ci-server").exists())
+            repoDirectoryPath = new File("ci-server/watched-repository");
         emptyOrCreateDirectory(repoDirectoryPath);
-        cloneRepository(repoUrl, repoDirectoryPath, outputFile);
-        }
-        catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
+        String branch = RequestExtraction.getBranch(request);
+        cloneRepository(repoUrl, repoDirectoryPath, branch);
     }
 
     /**
@@ -173,20 +235,26 @@ public class ContinuousIntegrationServer extends AbstractHandler {
      * 
      * @param repoUrl url of the Git repository
      * @param repoDirectory file path to the folder where the repository will be cloned
+     * @param branch branch to checkout, null means default
      * @param outputFile file to save the output
      */
-    static void cloneRepository(URL repoUrl, File repoDirectory, File outputFile) throws DownloadFailedException {
-        ProcessBuilder processBuilder = new ProcessBuilder("bash", "-c", "cd " + repoDirectory.toString() + " && git clone " + repoUrl.toString());
-        processBuilder.redirectOutput(outputFile);
+    static void cloneRepository(String repoUrl, File repoDirectory, String branch) throws DownloadFailedException {
+        if (repoUrl == null)
+            throw new DownloadFailedException();
+            
+        CloneCommand c = new CloneCommand();
+        c.setURI(repoUrl);
+        c.setDirectory(repoDirectory);
+        c.setBranch(branch);
         try {
-            Process p = processBuilder.start();
-            while (p.isAlive()) {
-                Thread.sleep(1000);
-            }
-        } catch (IOException e) {
+            c.call();
+        } catch (InvalidRemoteException e) {
             e.printStackTrace();
             throw new DownloadFailedException();
-        } catch (InterruptedException e) {
+        } catch (TransportException e) {
+            e.printStackTrace();
+            throw new DownloadFailedException();
+        } catch (GitAPIException e) {
             e.printStackTrace();
             throw new DownloadFailedException();
         }
