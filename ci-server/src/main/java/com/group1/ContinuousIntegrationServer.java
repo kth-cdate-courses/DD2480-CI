@@ -77,10 +77,10 @@ public class ContinuousIntegrationServer extends AbstractHandler {
         }
 
         // deploy site
-        // String deployArgs = HEADcommitSHA + " " + testStatus.toString() + " " + "'" + getLogs(testResultsOutputFile) + "'";
-        // ProcessBuilder processBuilder = new ProcessBuilder("bash", "-c", "deploy.sh " + deployArgs);
-        // processBuilder.redirectError(new File("builder_error_file"));
-        // Process p = processBuilder.start();        
+        String deployArgs = HEADcommitSHA + " " + testStatus.toString() + " " + "'" + getLogs(testResultsOutputFile) + "'";
+        ProcessBuilder processBuilder = new ProcessBuilder("bash", "-c", "deploy.sh " + deployArgs);
+        processBuilder.directory(new File("../"));
+        Process p = processBuilder.start();
     }
 
     public String getLogs(File file) {
@@ -215,6 +215,7 @@ public class ContinuousIntegrationServer extends AbstractHandler {
             // needed to ensure repo is cloned into ci-server/.watched-repository
             if (new File("ci-server").exists())
                 repoDirectoryPath = new File("ci-server/watched-repository");
+
             emptyOrCreateDirectory(repoDirectoryPath);
             cloneRepository(repoUrl, repoDirectoryPath);
         } catch (MalformedURLException e) {
