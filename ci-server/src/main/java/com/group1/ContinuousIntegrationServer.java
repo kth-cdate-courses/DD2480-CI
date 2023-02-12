@@ -51,6 +51,7 @@ public class ContinuousIntegrationServer extends AbstractHandler {
         }
 
         try {
+            System.out.println("downloading repository");
             downloadCode(JSONrequest);
         } catch (DownloadFailedException e) {
             e.printStackTrace();
@@ -86,6 +87,7 @@ public class ContinuousIntegrationServer extends AbstractHandler {
         ProcessBuilder processBuilder = new ProcessBuilder("bash", "-c", "deploy.sh " + deployArgs);
         processBuilder.redirectError(new File("builder_error_file"));
         processBuilder.start();
+        System.out.println("handle done, deploying site");
     }
     
     public String getLogs(File file) {
@@ -115,6 +117,7 @@ public class ContinuousIntegrationServer extends AbstractHandler {
             .build();
 
         try {
+            System.out.println("setting commit status on github");
             HttpClient.newHttpClient().send(httpRequest, HttpResponse.BodyHandlers.ofString());
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -148,6 +151,7 @@ public class ContinuousIntegrationServer extends AbstractHandler {
             processBuilder.directory(ci_server_dir);
         }
         try {
+            System.out.println("running tests");
             Process p = processBuilder.start();
             while (p.isAlive()) {
                 Thread.sleep(1000);
