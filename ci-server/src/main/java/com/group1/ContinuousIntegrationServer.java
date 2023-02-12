@@ -84,7 +84,7 @@ public class ContinuousIntegrationServer extends AbstractHandler {
 
         // deploy site
         String deployArgs = HEADcommitSHA + " " + testStatus.toString() + " " + "'" + getLogs(testResultsOutputFile) + "'";
-        ProcessBuilder processBuilder = new ProcessBuilder("bash", "-c", "deploy.sh " + deployArgs);
+        ProcessBuilder processBuilder = new ProcessBuilder("bash", "-c", "./deploy.sh " + deployArgs);
         processBuilder.redirectError(new File("builder_error_file"));
         processBuilder.start();
         System.out.println("handle done, deploying site");
