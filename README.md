@@ -50,6 +50,7 @@ We also spent a good amount of time pair programming and gluing the project toge
 2. Run `pnpm install` in the `status-site` folder
 3. Start ngrok with `ngrok http <port>` where `<port>` is mapped to the port of the ci server.
 4. Start server by entering the ContinuousIntegrationServer.java file and run it from visualCode. This will start the server.
+5. To enable deployment through the `deploy.sh` the file must be marked as executable. This can be done by running `chmod +x deploy.sh` in the root folder.
 
 
 ## Essence: assessment of our Team
