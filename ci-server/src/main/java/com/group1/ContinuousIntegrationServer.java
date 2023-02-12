@@ -5,7 +5,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletException;
 
 import java.io.IOException;
-
+import java.io.StringWriter;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -41,8 +41,12 @@ public class ContinuousIntegrationServer extends AbstractHandler {
         response.setStatus(HttpServletResponse.SC_OK);
         baseRequest.setHandled(true);
 
+        StringWriter sw = new StringWriter();
+        request.getReader().transferTo(sw);
+        JsonNode JSONrequest = new ObjectMapper().readTree(sw.toString());
+
         try {
-            downloadCode(request);
+            downloadCode(JSONrequest);
         } catch (DownloadFailedException e) {
             e.printStackTrace();
             System.out.println("\n\n\n ERROR REPO DOWNLOAD FAILED!!! NOT ABLE TO DO TASK \n\n\n");
@@ -63,7 +67,7 @@ public class ContinuousIntegrationServer extends AbstractHandler {
         }
 
         // update github status
-        String HEADcommitSHA = RequestExtraction.getLatestCommitSHA(request);
+        String HEADcommitSHA = RequestExtraction.getLatestCommitSHA(JSONrequest);
         if (testStatus == Status.SUCCESS) {
             updateCommitStatusOnGithub(HEADcommitSHA, true);
         } else {
@@ -76,6 +80,7 @@ public class ContinuousIntegrationServer extends AbstractHandler {
         processBuilder.directory(new File("../"));
         Process p = processBuilder.start();
     }
+
 
     public String getLogs(File file) {
         StringBuilder sb = new StringBuilder();
@@ -196,14 +201,13 @@ public class ContinuousIntegrationServer extends AbstractHandler {
      * 
      * @param request contains information on the event and the repository
      */
-    static void downloadCode(HttpServletRequest request) throws DownloadFailedException {
+    static void downloadCode(JsonNode request) throws DownloadFailedException {
         try {
-        URL repoUrl = new URL(RequestExtraction.getRepositoryUrlFromRequest(request));
-        File repoDirectoryPath = new File("./watched-repository");
-        emptyOrCreateDirectory(repoDirectoryPath);
-        cloneRepository(repoUrl, repoDirectoryPath);
-        }
-        catch (MalformedURLException e) {
+            URL repoUrl = new URL(RequestExtraction.getRepositoryUrlFromRequest(request));
+            File repoDirectoryPath = new File("./watched-repository");
+            emptyOrCreateDirectory(repoDirectoryPath);
+            cloneRepository(repoUrl, repoDirectoryPath);
+        } catch (MalformedURLException e) {
             e.printStackTrace();
         }
     }
