@@ -63,8 +63,7 @@ public class ContinuousIntegrationServerTest
         File repoDirectory = new File("./watched-repository");
 
         ContinuousIntegrationServer.emptyOrCreateDirectory(repoDirectory);
-
-        ContinuousIntegrationServer.cloneRepository(repoUrl, repoDirectory);
+        ContinuousIntegrationServer.cloneRepository(repoUrl, repoDirectory, null);
         String[] files = repoDirectory.list();
         assertTrue(files != null);
     }
@@ -77,8 +76,7 @@ public class ContinuousIntegrationServerTest
     public void noRepoUrlCloningTest() throws DownloadFailedException
     {
         File repoDirectory = new File("./watched-repository");
-
-        ContinuousIntegrationServer.cloneRepository(null, repoDirectory);
+        ContinuousIntegrationServer.cloneRepository(null, repoDirectory, null);
     }
 
     @Test

@@ -215,7 +215,8 @@ public class ContinuousIntegrationServer extends AbstractHandler {
         if (new File("ci-server").exists())
             repoDirectoryPath = new File("ci-server/watched-repository");
         emptyOrCreateDirectory(repoDirectoryPath);
-        cloneRepository(repoUrl, repoDirectoryPath);
+        String branch = RequestExtraction.getBranch(request);
+        cloneRepository(repoUrl, repoDirectoryPath, branch);
     }
 
     /**
@@ -225,15 +226,17 @@ public class ContinuousIntegrationServer extends AbstractHandler {
      * 
      * @param repoUrl url of the Git repository
      * @param repoDirectory file path to the folder where the repository will be cloned
+     * @param branch branch to checkout, null means default
      * @param outputFile file to save the output
      */
-    static void cloneRepository(String repoUrl, File repoDirectory) throws DownloadFailedException {
+    static void cloneRepository(String repoUrl, File repoDirectory, String branch) throws DownloadFailedException {
         if (repoUrl == null)
             throw new DownloadFailedException();
             
         CloneCommand c = new CloneCommand();
         c.setURI(repoUrl);
         c.setDirectory(repoDirectory);
+        c.setBranch(branch);
         try {
             c.call();
         } catch (InvalidRemoteException e) {
