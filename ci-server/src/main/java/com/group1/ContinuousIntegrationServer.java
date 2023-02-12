@@ -44,6 +44,7 @@ public class ContinuousIntegrationServer extends AbstractHandler {
         StringWriter sw = new StringWriter();
         request.getReader().transferTo(sw);
         JsonNode JSONrequest = new ObjectMapper().readTree(sw.toString());
+        
 
         try {
             downloadCode(JSONrequest);
@@ -77,10 +78,10 @@ public class ContinuousIntegrationServer extends AbstractHandler {
         }
 
         // deploy site
-        // String deployArgs = HEADcommitSHA + " " + testStatus.toString() + " " + "'" + getLogs(testResultsOutputFile) + "'";
-        // ProcessBuilder processBuilder = new ProcessBuilder("bash", "-c", "deploy.sh " + deployArgs);
-        // processBuilder.redirectError(new File("builder_error_file"));
-        // Process p = processBuilder.start();        
+        String deployArgs = HEADcommitSHA + " " + testStatus.toString() + " " + "'" + getLogs(testResultsOutputFile) + "'";
+        ProcessBuilder processBuilder = new ProcessBuilder("bash", "-c", "deploy.sh " + deployArgs);
+        processBuilder.redirectError(new File("builder_error_file"));
+        processBuilder.start();
     }
 
     public String getLogs(File file) {
