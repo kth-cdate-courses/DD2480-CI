@@ -127,6 +127,14 @@ public class ContinuousIntegrationServer extends AbstractHandler {
         return sb.toString();
     }
 
+    /**
+     * Updates the status of the commit on GitHub
+     * Creates a request with information on the commit and sends it to GitHub API.
+     * 
+     * @param commitSHA id of the commit
+     * @param success status of the commit
+     * @return true if success, false if fail because the token for GitHub API is missing
+     */
     public static boolean updateCommitStatusOnGithub(String commitSHA, boolean success) {
         String status = success ? "success" : "failure";
 
@@ -218,7 +226,8 @@ public class ContinuousIntegrationServer extends AbstractHandler {
 
     /**
      * Totally empties directory with the given path.
-     * If the directory does not exists, creates it.     
+     * If the directory does not exists, creates it. 
+     *     
      * @param dirPath path to the directory to empty
      */
     static void emptyOrCreateDirectory(File dirPath){
@@ -258,7 +267,7 @@ public class ContinuousIntegrationServer extends AbstractHandler {
      * Redirects the output to the given output file.
      * Requires the indicated directory to exist and be empty.
      * 
-     * @param repoUrl url of the Git repository
+     * @param repoUrl string url of the Git repository
      * @param repoDirectory file path to the folder where the repository will be cloned
      * @param branch branch to checkout, null means default
      * @param outputFile file to save the output
