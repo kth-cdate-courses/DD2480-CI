@@ -57,7 +57,7 @@ public class ContinuousIntegrationServerTest
      * @throws DownloadFailedException
      */
     @Test
-    public void repositoryNotEmptyCloningTest() throws DownloadFailedException, MalformedURLException {
+    public void repositoryNotEmptyCloningTest() throws DownloadFailedException {
         String repoUrl = "https://github.com/kth-cdate-courses/DD2480-CI.git";
         File repoDirectory = new File("./watched-repository");
 
