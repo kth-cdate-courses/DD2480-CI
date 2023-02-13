@@ -70,7 +70,7 @@ public class ContinuousIntegrationServerTest
     /**
      * Negative test for method cloneRepository.
      * The url of the repo was not found ie is null.
-     * @throws DowloadFailedException
+     * @throws DownloadFailedException
      */
     @Test(expected = DownloadFailedException.class)
     public void noRepoUrlCloningTest() throws DownloadFailedException {
