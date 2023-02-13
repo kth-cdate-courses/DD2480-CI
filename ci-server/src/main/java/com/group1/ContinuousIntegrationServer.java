@@ -31,20 +31,19 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 
 /**
  * Continuous Integration Server
- * 
- * Behaves according to the following steps:
- * - Gets a request from GitHub for each commit via Webhook
- * - Clones, builds and tests the commit
- * - Updates the status of the commit on GitHub via API
- * - Stores commit data for the front end deployment
- * 
  */
 public class ContinuousIntegrationServer extends AbstractHandler {
 
     /**
-     * Main method to handle the processing of a commit.
+     * Method to handle the processing of a commit.
      * 
-     * For more information, see https://github.com/KTH-DD2480/smallest-java-ci.
+     * Behaves according to the following steps:
+     * - Gets a request from GitHub for each commit via Webhook
+     * - Clones, builds and tests the commit
+     * - Updates the status of the commit on GitHub via API
+     * - Stores commit data for the front end deployment
+     * 
+     * For more information, see https://www.eclipse.org/jetty/javadoc/jetty-9/org/eclipse/jetty/server/Handler.html
      * 
      * @param target 
      * @param baseRequest
