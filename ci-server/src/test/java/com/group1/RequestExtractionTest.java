@@ -20,7 +20,6 @@ public class RequestExtractionTest
     /**
      * Positive test for method getRepositoryUrlFromRequest
      * Using Mockito to mock HttpServletRequest
-     * @throws IOException
      */
      @Test
      public void getRepositoryUrlFromRequestTest() {

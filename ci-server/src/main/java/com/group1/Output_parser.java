@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 public class Output_parser {
 
     /**
-     * takes in a file handle as an argument and returns either:
+     * Takes in a file handle as an argument and returns either:
      * State.COMPILE_FAILURE enum if the file provided at some point matches the regex "BUILD FAILURE",
      * State.SUCCESS  enum if the file provided at some point matches regex the "Failures: 0",
      * Status.TEST_FAILED enum if the file provided at some point matches the regex "Failures: [^0]+".

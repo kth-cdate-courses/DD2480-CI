@@ -70,6 +70,7 @@ public class ContinuousIntegrationServerTest
     /**
      * Negative test for method cloneRepository.
      * The url of the repo was not found ie is null.
+     * @throws DowloadFailedException
      */
     @Test(expected = DownloadFailedException.class)
     public void noRepoUrlCloningTest() throws DownloadFailedException {
@@ -78,6 +79,10 @@ public class ContinuousIntegrationServerTest
         ContinuousIntegrationServer.cloneRepository(null, repoDirectory, null);
     }
 
+    /**
+     * Positive test for method compileAndRunTests.
+     * Checks that some output has been written in the output file.
+     */
     @Test
     public void output_from_compileAndRunTests_is_written_to_file() {
         File targetDir = new File("testing_resources/maven_project_for_unit_testing");
@@ -91,6 +96,10 @@ public class ContinuousIntegrationServerTest
         assertTrue(outputFile.length() > 0);
     }
 
+    /**
+     * Positive test for method compileAndRunTests.
+     * Checks that the target directory was created.
+     */
     @Test
     public void compileAndRunTests_creates_directory_called_target_for_well_formed_maven_project() {
         File targetDir = new File("testing_resources/maven_project_for_unit_testing");
@@ -105,6 +114,10 @@ public class ContinuousIntegrationServerTest
         assertTrue(maven_target_dir.exists());
     }
 
+    /**
+     * Negative test for method compileAndRunTests.
+     * The method should not handle a repository which is not a Maven project.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void compileAndRunTests_throws_IllegalArgumentException_for_non_maven_Directory() {
         File targetDir = new File("testing_resources");
@@ -143,12 +156,20 @@ public class ContinuousIntegrationServerTest
         assertEquals(dataOnFile, expectedDataOnFile);
     }
 
+    /**
+     * Negative test for method appendCommit.
+     * Only takes json files as argument.
+     */
     @Test(expected = IllegalArgumentException.class)
     public void appendCommit_throws_exception_for_non_json_file() {
         File file = new File("testing_resources");
         new ContinuousIntegrationServer().appendCommit(file, new Commit("1", "2", "3"));
     }
 
+    /**
+     * Negative test for method appendCommit.
+     * Only handles json files with the attribute "commit".
+     */
     @Test(expected = IllegalArgumentException.class)
     public void appendCommit_throws_exception_for_json_file_without_top_level_commit_attribute() throws IOException {
         File jsonFile = new File("testing_resources/json_unit_testing/appendCommit_test.json");
