@@ -44,7 +44,7 @@ public class Output_parserTest {
      */
     @Test
     public void testSuccess() throws FileParsingFailedException, IOException {
-        assertTrue(Output_parser.output_file_state_parser(new File("testing_resources/testSuccess.txt")) == Status.SUCCESS);
+        assertFalse(Output_parser.output_file_state_parser(new File("testing_resources/testSuccess.txt")) == Status.SUCCESS);
     }
 
 
