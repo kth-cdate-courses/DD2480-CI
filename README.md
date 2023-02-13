@@ -50,7 +50,7 @@ We also spent a good amount of time pair programming and gluing the project toge
 2. Run `pnpm install` in the `status-site` folder
 3. Create a personal access token with access to changing commit status (has to be available as `GH_API_TOKEN`). This can be done by exporting the environment variable before running the server.
 4. Start ngrok with `ngrok http 8001`
-5. Start server by entering the ContinuousIntegrationServer.java file and run it from visualCode. This will start the server.
+5. Start server by entering the ContinuousIntegrationServer.java file and run it from visualCode. This will start the server. Make sure to be in the root directory while running this as the path will be important.
 6. To enable deployment through the `deploy.sh` the file must be marked as executable. This can be done by running `chmod +x deploy.sh` in the root folder.
 
 
