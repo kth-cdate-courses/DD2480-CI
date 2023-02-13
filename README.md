@@ -53,6 +53,10 @@ We also spent a good amount of time pair programming and gluing the project toge
 5. Start server by entering the ContinuousIntegrationServer.java file and run it from visualCode. This will start the server. Make sure to be in the root directory while running this as the path will be important.
 6. To enable deployment through the `deploy.sh` the file must be marked as executable. This can be done by running `chmod +x deploy.sh` in the root folder.
 
+## View Javadoc
+
+Clone repository and open the index.html in the javadoc folder. 
+
 ## Acknowledgements
 This project is based on the java ci template server provided at: https://github.com/KTH-DD2480/smallest-java-ci
 
