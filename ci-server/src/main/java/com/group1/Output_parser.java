@@ -29,16 +29,17 @@ public class Output_parser {
         boolean compileFailureFlag = false;
         boolean successFlag = false;
         boolean testFailureFlag = false;
-        BufferedReader br = new BufferedReader(new FileReader(file));
-        String line = br.readLine();
-        while(line != null) {
-            if(compileFailurePattern.matcher(line).find())
-                compileFailureFlag = true;
-            if(testFailurePattern.matcher(line).find())
-                testFailureFlag = true;
-            if(successPattern.matcher(line).find())
-                successFlag = true;
-            line = br.readLine();
+        try(BufferedReader br = new BufferedReader(new FileReader(file))) {
+            String line = br.readLine();
+            while(line != null) {
+                if(compileFailurePattern.matcher(line).find())
+                    compileFailureFlag = true;
+                if(testFailurePattern.matcher(line).find())
+                    testFailureFlag = true;
+                if(successPattern.matcher(line).find())
+                    successFlag = true;
+                line = br.readLine();
+            }
         }
         if(testFailureFlag)
             return Status.TEST_FAILED;
