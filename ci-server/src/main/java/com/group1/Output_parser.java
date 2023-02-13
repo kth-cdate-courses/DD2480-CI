@@ -5,6 +5,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.regex.Pattern;
 
+/**
+ * Used to parse the output of a file containing maven logs to analyze if the build/tests failed or were successful
+ */
 public class Output_parser {
 
     /**
@@ -15,7 +18,9 @@ public class Output_parser {
      *
      * @param  file a file which contains the output log from building/testing a maven project
      * @return a State enum, as specified above
-     * @throws FileParsingFailedException if none of above conditions are met or if file does not exist
+     * @throws FileParsingFailedException, if none of above conditions are met
+     * @throws IOException, if file does not exist
+     *
      */
     public static Status output_file_state_parser(File file) throws FileParsingFailedException, IOException {
         Pattern compileFailurePattern = Pattern.compile("BUILD FAILURE");
