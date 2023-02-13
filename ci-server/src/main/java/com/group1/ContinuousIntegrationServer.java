@@ -36,6 +36,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
  * - Gets a request from GitHub for each commit via Webhook
  * - Clones, builds and tests the commit
  * - Updates the status of the commit on GitHub via API
+ * - Stores commit data for the front end deployment
  * 
  */
 public class ContinuousIntegrationServer extends AbstractHandler {

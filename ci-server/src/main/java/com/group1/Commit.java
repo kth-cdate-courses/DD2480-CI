@@ -1,7 +1,7 @@
 package com.group1;
 
 /**
- * Contains commit information to send to Git API.
+ * Storage class for commit information.
  */
 public class Commit {
     public String sha;
