@@ -38,7 +38,21 @@ split up as follows:
 
 We also spent a good amount of time pair programming and gluing the project together in the end, which is reflected in commits with co-authors.
 
-## Use project, compile, test and run
+## Project setup
+### Prerequisites
+* Java 17
+* Maven
+* Node.js (with pnpm)
+* ngrok
+
+### Setup
+1. Clone the repository
+2. Run `pnpm install` in the `status-site` folder
+3. Create a personal access token with access to changing commit status (has to be available as `GH_API_TOKEN`). This can be done by exporting the environment variable before running the server.
+4. Start ngrok with `ngrok http 8001`
+5. Start server by entering the ContinuousIntegrationServer.java file and run it from visualCode. This will start the server. Make sure to be in the root directory while running this as the path will be important.
+6. To enable deployment through the `deploy.sh` the file must be marked as executable. This can be done by running `chmod +x deploy.sh` in the root folder.
+
 
 ## Essence: assessment of our Team
 
